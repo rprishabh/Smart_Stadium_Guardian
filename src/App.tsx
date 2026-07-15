@@ -260,12 +260,10 @@ export default function App() {
   });
   const isTriggeringRef = useRef<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
-  const [fanSpeechResult, setFanSpeechResult] = useState<{
-    originalText: string;
-    detectedLanguage: string;
-    englishTranslation: string;
-    tacticalInstruction: string;
-  } | null>(null);
+  const [capturedSTT, setCapturedSTT] = useState<string>("");
+  const [detectedLanguage, setDetectedLanguage] = useState<string>("");
+  const [englishTranslation, setEnglishTranslation] = useState<string>("");
+  const [tacticalInstruction, setTacticalInstruction] = useState<string>("");
   const [user, setUser] = useState<any>(null);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(process.env.NODE_ENV === "test" ? false : true);
   const [emailInput, setEmailInput] = useState<string>("");
@@ -583,12 +581,10 @@ export default function App() {
       
       try {
         const result = await translateFanQuery(simulatedPhrase, targetLanguage, matchPhase);
-        setFanSpeechResult({
-          originalText: simulatedPhrase,
-          detectedLanguage: result.detectedLanguage,
-          englishTranslation: result.englishTranslation,
-          tacticalInstruction: result.tacticalInstruction
-        });
+        setCapturedSTT(simulatedPhrase);
+        setDetectedLanguage(result.detectedLanguage);
+        setEnglishTranslation(result.englishTranslation);
+        setTacticalInstruction(result.tacticalInstruction);
         setAiRecommendation(result.tacticalInstruction);
         setAiDirective(result.tacticalInstruction);
         addLog("translation", "Assisted fan via Mic: " + result.englishTranslation);
@@ -635,12 +631,10 @@ export default function App() {
 
       try {
         const result = await translateFanQuery(transcript, targetLanguage, matchPhase);
-        setFanSpeechResult({
-          originalText: transcript,
-          detectedLanguage: result.detectedLanguage,
-          englishTranslation: result.englishTranslation,
-          tacticalInstruction: result.tacticalInstruction
-        });
+        setCapturedSTT(transcript);
+        setDetectedLanguage(result.detectedLanguage);
+        setEnglishTranslation(result.englishTranslation);
+        setTacticalInstruction(result.tacticalInstruction);
         setAiRecommendation(result.tacticalInstruction);
         setAiDirective(result.tacticalInstruction);
         addLog("translation", "Assisted fan via AI Matrix: " + result.englishTranslation);
@@ -657,6 +651,10 @@ export default function App() {
       console.error("Speech recognition error:", event.error);
       recognition.onend = null; // Unbind onend to prevent state race condition
       setIsListening(false);
+      if (event.error === "not-allowed") {
+        console.warn("Microphone access blocked by browser/user permissions.");
+        setMicPermissionBlocked(true);
+      }
       triggerSimulatedVoiceInput();
     };
 
@@ -677,12 +675,10 @@ export default function App() {
     
     try {
       const result = await translateFanQuery(query, targetLanguage, matchPhase);
-      setFanSpeechResult({
-        originalText: query,
-        detectedLanguage: result.detectedLanguage,
-        englishTranslation: result.englishTranslation,
-        tacticalInstruction: result.tacticalInstruction
-      });
+      setCapturedSTT(query);
+      setDetectedLanguage(result.detectedLanguage);
+      setEnglishTranslation(result.englishTranslation);
+      setTacticalInstruction(result.tacticalInstruction);
       setAiRecommendation(result.tacticalInstruction);
       setAiDirective(result.tacticalInstruction);
       addLog("translation", "Assisted fan via manual entry: " + result.englishTranslation);
@@ -1264,28 +1260,33 @@ export default function App() {
               </form>
             </div>
 
-            {fanSpeechResult && (
+            {capturedSTT && (
               <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs">
                 <div>
                   <span className="text-[10px] text-slate-500 uppercase font-mono block">Captured STT</span>
-                  <p className="text-slate-350 font-medium italic">"{fanSpeechResult.originalText}"</p>
+                  <p className="text-slate-350 font-medium italic">"{capturedSTT}"</p>
                 </div>
                 <div className="border-t border-slate-900 pt-2 space-y-1.5">
                   <div>
                     <span className="text-[10px] text-slate-500 uppercase font-mono block">Detected Script/Language</span>
-                    <span className="text-emerald-450 font-semibold">{fanSpeechResult.detectedLanguage}</span>
+                    <span className="text-emerald-455 font-semibold">{detectedLanguage}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-indigo-400 uppercase font-mono block">English Translation</span>
-                    <p className="text-slate-200 leading-normal font-semibold">"{fanSpeechResult.englishTranslation}"</p>
+                    <p className="text-slate-200 leading-normal font-semibold">"{englishTranslation}"</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-indigo-450 uppercase font-mono block">AI Tactical Instruction</span>
-                    <p className="text-slate-200 leading-relaxed font-sans">{fanSpeechResult.tacticalInstruction}</p>
+                    <span className="text-[10px] text-indigo-455 uppercase font-mono block">AI Tactical Instruction</span>
+                    <p className="text-slate-200 leading-relaxed font-sans">{tacticalInstruction}</p>
                   </div>
                 </div>
                 <button
-                  onClick={() => setFanSpeechResult(null)}
+                  onClick={() => {
+                    setCapturedSTT("");
+                    setDetectedLanguage("");
+                    setEnglishTranslation("");
+                    setTacticalInstruction("");
+                  }}
                   className="text-[10px] text-slate-500 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
                 >
                   Clear Log

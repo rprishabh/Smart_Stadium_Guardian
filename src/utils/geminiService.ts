@@ -65,58 +65,38 @@ export async function translateFanQuery(
   targetLanguage: string,
   matchPhase: string
 ): Promise<FanSpeechResultJson> {
-  const fallback: FanSpeechResultJson = {
-    detectedLanguage: targetLanguage,
-    englishTranslation: transcript,
-    tacticalInstruction: "Direct the fan to the nearest security or info checkpoint."
-  };
-
   if (!genAI) {
-    return fallback;
+    throw new Error("Gemini AI is not initialized. Please verify your REACT_APP_GEMINI_API_KEY environment variable.");
   }
 
   try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      generationConfig: {
-        responseMimeType: "application/json"
-      }
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const prompt = `You are an expert multilingual FIFA World Cup stadium operational AI advisor helping a volunteer.
-A fan just spoke a phrase captured via speech-to-text.
-The input text will frequently be transliterated text (e.g., Hindi written in English/Latin characters, such as "Washroom kaha par hai" or "Meri seet kaha parah").
-Your strict job is to translate that transliterated phrase into standard English, analyze what the fan actually meant, and provide a specific, contextual stadium routing instruction based on the current match phase '${matchPhase}'.
-
-Analyze this input: '${transcript}'
-
-Follow these strict routing rules:
-1. If they are asking about their seat/location (e.g., 'seet/seat/kaha'): The englishTranslation must be 'Where is my seat?'. The tacticalInstruction must instruct the volunteer to look at the block number on their ticket stub and direct them toward the nearest matching grandstand concourse entrance.
-2. If they are asking about the washroom/restroom (e.g., 'washroom/toilet/baño/kaha'): The englishTranslation must be 'Where is the washroom?'. The tacticalInstruction must tell the volunteer to guide them to the nearest available restroom layout in this sector, accounting for any match phase bottlenecks.
-3. For any other request, provide the specific directional instruction matching their facility request. Do NOT use generic instructions like 'go to the nearest security or info checkpoint'.
-
-Return your output strictly as a parseable JSON object structure matching these exact key formats:
-{
-  "detectedLanguage": "Hindi (Phonetic/Latin Script)",
-  "englishTranslation": "The actual English meaning goes here",
-  "tacticalInstruction": "The custom routing instruction based strictly on the rules above"
-}`;
+    const prompt = `You are a stadium security translation AI. A fan said: '${transcript}'. 1. Identify the language (even if it's written in English characters like Hinglish). 2. Translate it to English. 3. Provide a one-sentence tactical routing instruction for stadium staff. Return EXACTLY this JSON format: { "detectedLanguage": "...", "englishTranslation": "...", "tacticalInstruction": "..." }`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
     if (!text || text.trim() === "") {
-      return fallback;
+      throw new Error("Empty response received from Gemini API.");
     }
 
-    const parsed = JSON.parse(text.trim());
+    let cleanedText = text.trim();
+    // Remove markdown code fences if present
+    if (cleanedText.startsWith("```")) {
+      cleanedText = cleanedText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+    }
+    cleanedText = cleanedText.trim();
+
+    const parsed = JSON.parse(cleanedText);
+
     return {
-      detectedLanguage: parsed.detectedLanguage || targetLanguage,
+      detectedLanguage: parsed.detectedLanguage || "Unknown",
       englishTranslation: parsed.englishTranslation || transcript,
-      tacticalInstruction: parsed.tacticalInstruction || "Direct the fan to the nearest checkpoint."
+      tacticalInstruction: parsed.tacticalInstruction || "Direct the fan to the nearest security or info checkpoint."
     };
   } catch (error) {
-    console.error("GEMINI API FAILURE:", error);
-    return fallback;
+    console.error("TRANSLATION API ERROR:", error);
+    throw error;
   }
 }
