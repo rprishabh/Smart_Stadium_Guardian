@@ -655,6 +655,7 @@ export default function App() {
 
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
+      recognition.onend = null; // Unbind onend to prevent state race condition
       setIsListening(false);
       triggerSimulatedVoiceInput();
     };
