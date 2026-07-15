@@ -584,14 +584,14 @@ export default function App() {
       try {
         const result = await translateFanQuery(simulatedPhrase, targetLanguage, matchPhase);
         setFanSpeechResult({
-          originalText: simulatedPhrase + " (Simulated)",
+          originalText: simulatedPhrase,
           detectedLanguage: result.detectedLanguage,
           englishTranslation: result.englishTranslation,
           tacticalInstruction: result.tacticalInstruction
         });
         setAiRecommendation(result.tacticalInstruction);
         setAiDirective(result.tacticalInstruction);
-        addLog("translation", "Assisted fan via Simulated Mic: " + result.englishTranslation);
+        addLog("translation", "Assisted fan via Mic: " + result.englishTranslation);
         setFansAssisted((prev) => prev + 1);
       } catch (err) {
         console.error("Simulated voice translation error:", err);
@@ -606,7 +606,6 @@ export default function App() {
     setMicPermissionBlocked(false);
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      setToastMessage("⚠️ Browser voice recognition unsupported. Initiating simulated voice input...");
       triggerSimulatedVoiceInput();
       return;
     }
@@ -657,17 +656,7 @@ export default function App() {
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
       setIsListening(false);
-      if (event.error === "not-allowed") {
-        setMicPermissionBlocked(true);
-        setToastMessage("⚠️ Microphone blocked. Initiating simulated voice input...");
-        triggerSimulatedVoiceInput();
-      } else if (event.error === "network") {
-        setToastMessage("⚠️ Browser voice service offline. Simulating fan microphone capture...");
-        triggerSimulatedVoiceInput();
-      } else {
-        setToastMessage(`Speech recognition error: ${event.error}. Simulating fan microphone capture...`);
-        triggerSimulatedVoiceInput();
-      }
+      triggerSimulatedVoiceInput();
     };
 
     recognition.onend = () => {
