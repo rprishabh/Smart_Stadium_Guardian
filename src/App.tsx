@@ -1622,34 +1622,47 @@ export default function App() {
       {/* 🏆 Rank Up Banner Modal Overlay */}
       {rankUpData && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 zone-modal-backdrop"
-          style={{ backgroundColor: "rgba(2, 6, 23, 0.85)", backdropFilter: "blur(20px)" }}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          style={{ backgroundColor: "rgba(3, 7, 18, 0.95)", backdropFilter: "blur(24px)" }}
         >
-          <div className="zone-modal-content w-full max-w-md bg-slate-900 border border-yellow-500/40 rounded-2xl shadow-2xl p-6 text-center space-y-4">
-            <div className="w-20 h-20 mx-auto rounded-full bg-yellow-500/10 border-2 border-yellow-500 flex items-center justify-center text-yellow-500 text-3xl animate-bounce">
+          {/* Ambient glow backgrounds */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35">
+            <div className="absolute top-[-10%] left-[10%] w-[400px] h-[400px] rounded-full bg-indigo-500/20 blur-[100px] animate-pulse" />
+            <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full bg-emerald-500/15 blur-[100px] animate-pulse" />
+          </div>
+
+          <div className="relative w-full max-w-lg bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/80 rounded-3xl shadow-2xl p-6 sm:p-8 flex flex-col items-center text-center space-y-6 transform scale-100 transition-all duration-300">
+            {/* Ribbon glow */}
+            <div className="absolute -top-12 w-24 h-24 rounded-full bg-indigo-600/25 blur-xl pointer-events-none" />
+            
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl shadow-lg shadow-indigo-500/20">
               🏆
             </div>
-            
-            <h2 className="text-xl font-extrabold text-white tracking-tight">
-              NFT Badge Minted!
-            </h2>
-            
-            <p className="text-sm text-slate-200 font-medium">
-              RANK UP! You have officially earned your Level {rankUpData.level}: {rankUpData.title} Soulbound NFT Badge on Polygon!
-            </p>
 
-            {/* NFT Image Preview */}
-            <div className="w-48 h-48 mx-auto rounded-xl border border-slate-800 bg-slate-950 p-2 flex items-center justify-center shadow-lg shadow-black/40">
+            <div className="space-y-1">
+              <span className="text-[10px] text-indigo-400 font-black tracking-[0.2em] uppercase block">
+                Rank Up Achieved
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">
+                NFT Successfully Minted!
+              </h2>
+            </div>
+
+            {/* Large high-resolution NFT Badge display */}
+            <div className="relative group w-64 h-64 sm:w-80 sm:h-80 rounded-2xl border border-indigo-500/20 bg-slate-950/80 p-4 flex items-center justify-center shadow-2xl shadow-indigo-950/30 overflow-hidden">
+              {/* Inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-600/10 opacity-50 pointer-events-none" />
+              
               <img
                 src={getBadgeIpfsUrl(rankUpData.level, rankUpData.title)}
-                alt={`${rankUpData.title} NFT Badge Preview`}
-                className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+                alt={`${rankUpData.title} NFT Badge`}
+                className="w-full h-full object-contain transform transition-transform duration-500 hover:scale-105 select-none z-10 filter drop-shadow-[0_10px_20px_rgba(99,102,241,0.25)]"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                   const p = e.currentTarget.parentElement;
                   if (p) {
                     const fallback = document.createElement("div");
-                    fallback.className = "w-40 h-40 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-sm font-bold text-indigo-400";
+                    fallback.className = "w-48 h-48 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-lg font-bold text-indigo-400 z-10 shadow-inner";
                     fallback.innerText = `Level ${rankUpData.level}`;
                     p.appendChild(fallback);
                   }
@@ -1657,23 +1670,32 @@ export default function App() {
               />
             </div>
 
-            <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex flex-col gap-1.5 items-center">
-              <span className="text-[10px] text-slate-500 font-mono">Transaction Hash</span>
+            <div className="space-y-2 max-w-sm">
+              <p className="text-sm font-bold text-slate-300 leading-snug">
+                Congratulations! You earned your Level {rankUpData.level} Soulbound Badge:
+              </p>
+              <h3 className="text-lg font-black text-indigo-455 tracking-wide">
+                {rankUpData.title}
+              </h3>
+            </div>
+
+            <div className="w-full bg-slate-950/80 p-3.5 rounded-xl border border-slate-900/60 flex flex-col gap-1.5 items-center">
+              <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Polygon Cryptographic Receipt</span>
               <a
                 href={`https://amoy.polygonscan.com/tx/${rankUpData.hash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-indigo-400 hover:text-indigo-300 font-mono underline break-all"
+                className="text-xs text-indigo-400 hover:text-indigo-300 font-mono underline break-all font-semibold"
               >
-                {rankUpData.hash} ↗
+                {rankUpData.hash.substring(0, 18)}...{rankUpData.hash.substring(rankUpData.hash.length - 16)} ↗
               </a>
             </div>
 
             <button
               onClick={() => setRankUpData(null)}
-              className="w-full py-2 bg-indigo-650 hover:bg-indigo-600 transition rounded-lg text-xs font-semibold text-white cursor-pointer"
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] transition duration-200 rounded-xl text-xs font-bold text-white shadow-xl shadow-indigo-950/40 cursor-pointer flex items-center justify-center gap-1.5"
             >
-              Continue Monitoring
+              Continue Operations Console
             </button>
           </div>
         </div>
