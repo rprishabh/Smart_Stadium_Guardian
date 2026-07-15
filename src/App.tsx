@@ -181,8 +181,14 @@ export default function App() {
 
   // ── Web3 states ──
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [tasksCompleted, setTasksCompleted] = useState<number>(0);
-  const [currentNftLevel, setCurrentNftLevel] = useState<number>(1);
+  const [tasksCompleted, setTasksCompleted] = useState<number>(() => {
+    const saved = localStorage.getItem("tasksCompleted");
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [currentNftLevel, setCurrentNftLevel] = useState<number>(() => {
+    const saved = localStorage.getItem("currentNftLevel");
+    return saved ? parseInt(saved, 10) : 1;
+  });
   const [isMinting, setIsMinting] = useState<boolean>(false);
   const [deployingZoneId, setDeployingZoneId] = useState<string | null>(null);
   const [rankUpData, setRankUpData] = useState<{
@@ -198,6 +204,7 @@ export default function App() {
       sectorAction: "Steward orientation and safety protocol onboarding completed"
     }
   });
+  const isTriggeringRef = useRef<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [fanSpeechResult, setFanSpeechResult] = useState<{
     originalText: string;
@@ -240,9 +247,42 @@ export default function App() {
     setShiftLogs(prev => [{ time: new Date().toLocaleTimeString(), type, message }, ...prev]);
   };
 
-  const [fansAssisted, setFansAssisted] = useState<number>(0);
-  const [alertsResolved, setAlertsResolved] = useState<number>(0);
-  const [distanceCovered, setDistanceCovered] = useState<number>(0.0);
+  const [fansAssisted, setFansAssisted] = useState<number>(() => {
+    const saved = localStorage.getItem("fansAssisted");
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [alertsResolved, setAlertsResolved] = useState<number>(() => {
+    const saved = localStorage.getItem("alertsResolved");
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [distanceCovered, setDistanceCovered] = useState<number>(() => {
+    const saved = localStorage.getItem("distanceCovered");
+    return saved ? parseFloat(saved) : 0.0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tasksCompleted", tasksCompleted.toString());
+  }, [tasksCompleted]);
+
+  useEffect(() => {
+    localStorage.setItem("currentNftLevel", currentNftLevel.toString());
+  }, [currentNftLevel]);
+
+  useEffect(() => {
+    localStorage.setItem("badgeReceipts", JSON.stringify(badgeReceipts));
+  }, [badgeReceipts]);
+
+  useEffect(() => {
+    localStorage.setItem("fansAssisted", fansAssisted.toString());
+  }, [fansAssisted]);
+
+  useEffect(() => {
+    localStorage.setItem("alertsResolved", alertsResolved.toString());
+  }, [alertsResolved]);
+
+  useEffect(() => {
+    localStorage.setItem("distanceCovered", distanceCovered.toString());
+  }, [distanceCovered]);
 
   const handleConnectWallet = async () => {
     try {
@@ -329,18 +369,24 @@ export default function App() {
           console.error("Firebase multi-user database write error: ", dbErr);
         }
 
-        if (dbLogId) {
-          const docId: string = dbLogId;
-          setBadgeReceipts((prev) => ({
+        const matchContext = `FIFA World Cup - Group Stage: ${matchPhase === "Pre-Match" ? "Pre-Match Entry" : matchPhase === "Half-Time" ? "Half-Time Surge" : matchPhase === "Post-Match" ? "Post-Match Exit" : "Live Play"}`;
+
+        // Populate receipt locally immediately to prevent UI details being missing
+        setBadgeReceipts((prev) => {
+          const updated = {
             ...prev,
             [targetLevel]: {
               hash: hash,
-              firestoreDocId: docId,
-              matchContext: `FIFA World Cup - Group Stage: ${matchPhase === "Pre-Match" ? "Pre-Match Entry" : matchPhase === "Half-Time" ? "Half-Time Surge" : matchPhase === "Post-Match" ? "Post-Match Exit" : "Live Play"}`,
+              firestoreDocId: dbLogId || "local_sync_offline",
+              matchContext: matchContext,
               sectorAction: taskText,
             },
-          }));
+          };
+          localStorage.setItem("badgeReceipts", JSON.stringify(updated));
+          return updated;
+        });
 
+        if (dbLogId) {
           const firebaseLog: SecurityIncidentLog = {
             timestamp: new Date().toLocaleTimeString(),
             zone: "Firebase",
@@ -351,7 +397,7 @@ export default function App() {
           setLogs((prev) => [newLog, firebaseLog, ...prev]);
         } else {
           setLogs((prev) => [newLog, ...prev]);
-          setToastMessage("Network error: Failed to sync persistent audit log to Firebase database.");
+          setToastMessage("Firebase Sync Offline: Local cryptographic receipt generated.");
         }
       } else {
         alert("Smart contract minting failed or was cancelled.");
@@ -368,12 +414,15 @@ export default function App() {
 
   // Monitor for automated Soulbound mint trigger
   useEffect(() => {
-    if (walletAddress && !isMinting && !rankUpData) {
+    if (walletAddress && !isMinting && !rankUpData && !isTriggeringRef.current) {
       const nextLevel = currentNftLevel + 1;
       if (nextLevel <= 10) {
         const requiredTasks = (nextLevel - 1) * 2;
         if (tasksCompleted >= requiredTasks) {
-          triggerLevelUp(nextLevel, walletAddress);
+          isTriggeringRef.current = true;
+          triggerLevelUp(nextLevel, walletAddress).finally(() => {
+            isTriggeringRef.current = false;
+          });
         }
       }
     }
