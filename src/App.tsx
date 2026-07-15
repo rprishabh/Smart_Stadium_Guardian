@@ -223,6 +223,7 @@ export default function App() {
   const [prevTelemetry, setPrevTelemetry] = useState<TelemetryPoint[] | null>(null);
   const [logs, setLogs] = useState<SecurityIncidentLog[]>([]);
   const [targetLanguage, setTargetLanguage] = useState<string>("English");
+  const [manualQueryText, setManualQueryText] = useState<string>("");
   const [cctvUrl, setCctvUrl] = useState<string>("");
   const [aiDirective, setAiDirective] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
@@ -624,6 +625,35 @@ export default function App() {
     };
 
     recognition.start();
+  };
+
+  const handleManualQuerySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualQueryText.trim()) return;
+
+    setIsAiLoading(true);
+    setAiStatus("Online");
+    const query = manualQueryText.trim();
+    
+    try {
+      const result = await translateFanQuery(query, targetLanguage, matchPhase);
+      setFanSpeechResult({
+        originalText: query,
+        detectedLanguage: result.detectedLanguage,
+        englishTranslation: result.englishTranslation,
+        tacticalInstruction: result.tacticalInstruction
+      });
+      setAiRecommendation(result.tacticalInstruction);
+      setAiDirective(result.tacticalInstruction);
+      addLog("translation", "Assisted fan via manual entry: " + result.englishTranslation);
+      setFansAssisted((prev) => prev + 1);
+      setManualQueryText("");
+    } catch (err) {
+      console.error("Gemini translation query error:", err);
+      setToastMessage("Network error: Gemini API translation query failed. Please try again.");
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   // Synchronize AI Adviser status with telemetry alerts
@@ -1170,6 +1200,29 @@ export default function App() {
                 🎤 Microphone access blocked. Please allow browser permissions to test live AI translation.
               </p>
             )}
+
+            {/* Manual Query Input Fallback */}
+            <div className="mt-3 pt-3 border-t border-slate-900/60">
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">
+                Or Type Fan Query Manually
+              </span>
+              <form onSubmit={handleManualQuerySubmit} className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="e.g. Washroom kaha par hai"
+                  value={manualQueryText}
+                  onChange={(e) => setManualQueryText(e.target.value)}
+                  className="flex-grow bg-slate-950 border border-slate-800 text-slate-100 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                />
+                <button
+                  type="submit"
+                  disabled={isAiLoading || !manualQueryText.trim()}
+                  className="px-3 bg-indigo-950 hover:bg-indigo-900 border border-indigo-850 text-indigo-400 hover:text-indigo-300 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition"
+                >
+                  Translate
+                </button>
+              </form>
+            </div>
 
             {fanSpeechResult && (
               <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs">
