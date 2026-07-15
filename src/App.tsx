@@ -368,8 +368,14 @@ export default function App() {
 
   // Monitor for automated Soulbound mint trigger
   useEffect(() => {
-    if (walletAddress && tasksCompleted >= 2 && currentNftLevel === 1 && !isMinting && !rankUpData) {
-      triggerLevelUp(2, walletAddress);
+    if (walletAddress && !isMinting && !rankUpData) {
+      const nextLevel = currentNftLevel + 1;
+      if (nextLevel <= 10) {
+        const requiredTasks = (nextLevel - 1) * 2;
+        if (tasksCompleted >= requiredTasks) {
+          triggerLevelUp(nextLevel, walletAddress);
+        }
+      }
     }
   }, [walletAddress, tasksCompleted, currentNftLevel, isMinting, rankUpData, triggerLevelUp]);
 
@@ -1119,9 +1125,15 @@ export default function App() {
               <p className="text-xs text-white font-bold mt-1">
                 {VOLUNTEER_RANKS[currentNftLevel - 1] || "Novice Steward"}
               </p>
-              <span className="text-[9px] text-slate-500 mt-0.5">
-                Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> / 2 for Lvl 2
-              </span>
+              {currentNftLevel < 10 ? (
+                <span className="text-[9px] text-slate-500 mt-0.5">
+                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> / {currentNftLevel * 2} for Lvl {currentNftLevel + 1}
+                </span>
+              ) : (
+                <span className="text-[9px] text-slate-500 mt-0.5">
+                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> (Max Level Reached)
+                </span>
+              )}
             </div>
 
             <p className="text-[10px] text-slate-400 leading-relaxed text-center font-medium">
@@ -1136,13 +1148,13 @@ export default function App() {
                     {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
                   </span>
                 </div>
-                {tasksCompleted >= 2 && currentNftLevel === 1 && (
+                {currentNftLevel < 10 && tasksCompleted >= currentNftLevel * 2 && (
                   <button
-                    onClick={() => triggerLevelUp(2, walletAddress)}
+                    onClick={() => triggerLevelUp(currentNftLevel + 1, walletAddress)}
                     disabled={isMinting}
                     className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    {isMinting ? "Minting..." : "🏆 Claim Rank 2 NFT"}
+                    {isMinting ? "Minting..." : `🏆 Claim Rank ${currentNftLevel + 1} NFT`}
                   </button>
                 )}
               </div>
