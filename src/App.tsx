@@ -1589,6 +1589,25 @@ export default function App() {
               RANK UP! You have officially earned your Level {rankUpData.level}: {rankUpData.title} Soulbound NFT Badge on Polygon!
             </p>
 
+            {/* NFT Image Preview */}
+            <div className="w-48 h-48 mx-auto rounded-xl border border-slate-800 bg-slate-950 p-2 flex items-center justify-center shadow-lg shadow-black/40">
+              <img
+                src={getBadgeIpfsUrl(rankUpData.level, rankUpData.title)}
+                alt={`${rankUpData.title} NFT Badge Preview`}
+                className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const p = e.currentTarget.parentElement;
+                  if (p) {
+                    const fallback = document.createElement("div");
+                    fallback.className = "w-40 h-40 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-sm font-bold text-indigo-400";
+                    fallback.innerText = `Level ${rankUpData.level}`;
+                    p.appendChild(fallback);
+                  }
+                }}
+              />
+            </div>
+
             <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex flex-col gap-1.5 items-center">
               <span className="text-[10px] text-slate-500 font-mono">Transaction Hash</span>
               <a
