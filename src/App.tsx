@@ -8,7 +8,7 @@ import ZoneCard from "./components/ZoneCard";
 import ZoneDetailModal from "./components/ZoneDetailModal";
 import CCTVGrid from "./components/CCTVGrid";
 import { connectWallet, awardVolunteerBadge } from "./utils/web3Service";
-import { generateCrowdAdvice, translateFanQuery } from "./utils/geminiService";
+import { translateFanQuery } from "./utils/geminiService";
 import { logDeploymentEvent, auth } from "./utils/firebaseConfig";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
@@ -712,17 +712,12 @@ export default function App() {
             const roleMetrics = getSectorData(matchPhase);
             const activeSector = roleMetrics.find(r => r.alert)?.name || mostCritical.zoneId;
 
-            const advice = await generateCrowdAdvice(
-              mostCritical.gateCapacityPercentage,
-              mostCritical.activeIncidentsCount,
-              matchPhase,
-              activeSector
-            );
+            // Generate clean local mock advice matching the telemetry instead of calling Gemini to reserve quota
+            const advice = `Alert: Capacity in ${activeSector} is at ${mostCritical.gateCapacityPercentage}% with ${mostCritical.activeIncidentsCount} active incident(s) during ${matchPhase}. Ground stewards deployed to divert capacity flow.`;
             setAiRecommendation(advice);
             setAiDirective(advice);
           } catch (err) {
-            console.error("Failed to generate dynamic advice in effect:", err);
-            setToastMessage("Network error: Gemini API advice query failed. Please try again.");
+            console.error("Failed to generate simulated advice:", err);
           }
         };
         fetchSimulatedAdvice();
