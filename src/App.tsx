@@ -1390,7 +1390,7 @@ export default function App() {
                             </button>
                           )}
                           <span className="text-[10px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded font-medium">
-                            Gemini 1.5 Pro Matrix
+                            Gemini 2.5 Flash Matrix
                           </span>
                         </div>
                       </div>

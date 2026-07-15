@@ -45,8 +45,7 @@ export async function generateCrowdAdvice(
 
     return text.trim();
   } catch (error) {
-    console.error("[Gemini Service Error]: Failed to generate advice:", error);
-    console.error(error);
+    console.error("GEMINI API FAILURE:", error);
     return fallbackMessage;
   }
 }
@@ -84,13 +83,16 @@ export async function translateFanQuery(
       }
     });
 
-    const prompt = `You are an expert multilingual FIFA World Cup stadium operational AI advisor helping a volunteer. A fan just spoke a phrase captured via speech-to-text. The input text could be phonetic Hinglish (e.g., 'Meri seet kaha parah').
+    const prompt = `You are an expert multilingual FIFA World Cup stadium operational AI advisor helping a volunteer.
+A fan just spoke a phrase captured via speech-to-text.
+The input text will frequently be transliterated text (e.g., Hindi written in English/Latin characters, such as "Washroom kaha par hai" or "Meri seet kaha parah").
+Your strict job is to translate that transliterated phrase into standard English, analyze what the fan actually meant, and provide a specific, contextual stadium routing instruction based on the current match phase '${matchPhase}'.
 
 Analyze this input: '${transcript}'
 
-You must evaluate what the fan actually meant, translate it into standard English, and then give a practical routing action based on the current match phase '${matchPhase}'. Follow these strict routing rules:
+Follow these strict routing rules:
 1. If they are asking about their seat/location (e.g., 'seet/seat/kaha'): The englishTranslation must be 'Where is my seat?'. The tacticalInstruction must instruct the volunteer to look at the block number on their ticket stub and direct them toward the nearest matching grandstand concourse entrance.
-2. If they are asking about the washroom/restroom (e.g., 'washroom/toilet/baño'): The englishTranslation must be 'Where is the washroom?'. The tacticalInstruction must tell the volunteer to guide them to the nearest available restroom layout in this sector, accounting for any match phase bottlenecks.
+2. If they are asking about the washroom/restroom (e.g., 'washroom/toilet/baño/kaha'): The englishTranslation must be 'Where is the washroom?'. The tacticalInstruction must tell the volunteer to guide them to the nearest available restroom layout in this sector, accounting for any match phase bottlenecks.
 3. For any other request, provide the specific directional instruction matching their facility request. Do NOT use generic instructions like 'go to the nearest security or info checkpoint'.
 
 Return your output strictly as a parseable JSON object structure matching these exact key formats:
@@ -114,8 +116,7 @@ Return your output strictly as a parseable JSON object structure matching these 
       tacticalInstruction: parsed.tacticalInstruction || "Direct the fan to the nearest checkpoint."
     };
   } catch (error) {
-    console.error("[Gemini Service Error]: Failed to translate fan query JSON:", error);
-    console.error(error);
+    console.error("GEMINI API FAILURE:", error);
     return fallback;
   }
 }

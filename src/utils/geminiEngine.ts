@@ -80,8 +80,7 @@ Instructions:
 
     return text.trim();
   } catch (error) {
-    console.error("[Gemini Engine Error]: Failed to evaluate metrics:", error);
-    console.error(error);
+    console.error("GEMINI API FAILURE:", error);
     return fallbackMessage;
   }
 }
