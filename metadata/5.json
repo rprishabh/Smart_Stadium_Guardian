@@ -1,0 +1,10 @@
+{
+  "name": "Level 5: Concourse Captain",
+  "description": "Awarded for advanced operational endurance, successfully maintaining safe crowd flow parameters inside heavily populated concourses (70%-80% capacity) for an extended duration.",
+  "image": "ipfs://bafybeigup3a7qo2fkjjxgzksriym7wq7vdjyj2eqwo4mqbox6eokgnupoy/Level 5 - Concourse Captain NFT.png",
+  "attributes": [
+    { "trait_type": "Event", "value": "FIFA World Cup 2026" },
+    { "trait_type": "Rank Level", "value": "5" },
+    { "trait_type": "Transferable", "value": "False (Soulbound)" }
+  ]
+}

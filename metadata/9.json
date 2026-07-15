@@ -1,0 +1,10 @@
+{
+  "name": "Level 9: Stadium Elite",
+  "description": "Awarded for flawless operational consistency and elite risk management throughout consecutive high-stress tournament match shifts with zero safety breaches.",
+  "image": "ipfs://bafybeigup3a7qo2fkjjxgzksriym7wq7vdjyj2eqwo4mqbox6eokgnupoy/Level 9 - Stadium Elite NFT.png",
+  "attributes": [
+    { "trait_type": "Event", "value": "FIFA World Cup 2026" },
+    { "trait_type": "Rank Level", "value": "9" },
+    { "trait_type": "Transferable", "value": "False (Soulbound)" }
+  ]
+}
