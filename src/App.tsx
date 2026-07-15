@@ -559,11 +559,55 @@ export default function App() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const triggerSimulatedVoiceInput = () => {
+    setIsListening(true);
+    
+    // Select a realistic phrase based on targetLanguage
+    let simulatedPhrase = "Washroom kaha par hai"; // Hindi default
+    if (targetLanguage === "Spanish") {
+      simulatedPhrase = "¿Dónde está la puerta de salida?";
+    } else if (targetLanguage === "French") {
+      simulatedPhrase = "Où est le poste de secours?";
+    } else if (targetLanguage === "Arabic") {
+      simulatedPhrase = "أين المخرج الرئيسي؟";
+    } else if (targetLanguage === "German") {
+      simulatedPhrase = "Wo ist die medizinische Station?";
+    } else if (targetLanguage === "English") {
+      simulatedPhrase = "Where is the main entry gate?";
+    }
+
+    setTimeout(async () => {
+      setIsListening(false);
+      setIsAiLoading(true);
+      setAiStatus("Online");
+      
+      try {
+        const result = await translateFanQuery(simulatedPhrase, targetLanguage, matchPhase);
+        setFanSpeechResult({
+          originalText: simulatedPhrase + " (Simulated)",
+          detectedLanguage: result.detectedLanguage,
+          englishTranslation: result.englishTranslation,
+          tacticalInstruction: result.tacticalInstruction
+        });
+        setAiRecommendation(result.tacticalInstruction);
+        setAiDirective(result.tacticalInstruction);
+        addLog("translation", "Assisted fan via Simulated Mic: " + result.englishTranslation);
+        setFansAssisted((prev) => prev + 1);
+      } catch (err) {
+        console.error("Simulated voice translation error:", err);
+        setToastMessage("Gemini API connection error. Please try manually typing.");
+      } finally {
+        setIsAiLoading(false);
+      }
+    }, 1500); // 1.5s simulated listening animation
+  };
+
   const handleListenToFan = () => {
     setMicPermissionBlocked(false);
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("❌ Browser Speech Recognition is not supported in this browser. Please use Chrome or Safari.");
+      setToastMessage("⚠️ Browser voice recognition unsupported. Initiating simulated voice input...");
+      triggerSimulatedVoiceInput();
       return;
     }
 
@@ -615,8 +659,14 @@ export default function App() {
       setIsListening(false);
       if (event.error === "not-allowed") {
         setMicPermissionBlocked(true);
+        setToastMessage("⚠️ Microphone blocked. Initiating simulated voice input...");
+        triggerSimulatedVoiceInput();
+      } else if (event.error === "network") {
+        setToastMessage("⚠️ Browser voice service offline. Simulating fan microphone capture...");
+        triggerSimulatedVoiceInput();
       } else {
-        setToastMessage(`Speech recognition error: ${event.error}. Network error. Please try again.`);
+        setToastMessage(`Speech recognition error: ${event.error}. Simulating fan microphone capture...`);
+        triggerSimulatedVoiceInput();
       }
     };
 
