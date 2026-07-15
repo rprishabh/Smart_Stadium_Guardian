@@ -39,7 +39,7 @@ export async function evaluateStadiumMetrics(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Format the telemetry data cleanly for prompt digestion
     const serializedMetrics = telemetry
@@ -81,6 +81,7 @@ Instructions:
     return text.trim();
   } catch (error) {
     console.error("[Gemini Engine Error]: Failed to evaluate metrics:", error);
+    console.error(error);
     return fallbackMessage;
   }
 }

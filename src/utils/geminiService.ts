@@ -32,7 +32,7 @@ export async function generateCrowdAdvice(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `You are a FIFA World Cup stadium AI. The active match state timeline is "${timelineState}" and the sector under review is "${criticalSector}". The sector is currently at ${capacity}% capacity with ${incidents} active incidents. Give a strict 2-sentence tactical recommendation for the ground volunteers managing this specific sector.`;
 
@@ -46,6 +46,7 @@ export async function generateCrowdAdvice(
     return text.trim();
   } catch (error) {
     console.error("[Gemini Service Error]: Failed to generate advice:", error);
+    console.error(error);
     return fallbackMessage;
   }
 }
@@ -77,7 +78,7 @@ export async function translateFanQuery(
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json"
       }
@@ -114,6 +115,7 @@ Return your output strictly as a parseable JSON object structure matching these 
     };
   } catch (error) {
     console.error("[Gemini Service Error]: Failed to translate fan query JSON:", error);
+    console.error(error);
     return fallback;
   }
 }
