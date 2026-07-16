@@ -12,8 +12,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #020617; /* bg-slate-950 equivalent */
-  color: #f8fafc; /* text-slate-50 equivalent */
+  background-color: #020617;
+  /* bg-slate-950 equivalent */
+  color: #f8fafc;
+  /* text-slate-50 equivalent */
 }
 
 code {
@@ -25,13 +27,16 @@ code {
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
@@ -44,12 +49,13 @@ code {
 .glass-card {
   position: relative;
   overflow: hidden;
-  background: rgba(15, 23, 42, 0.55); /* slate-900 / 55% */
+  background: rgba(15, 23, 42, 0.55);
+  /* slate-900 / 55% */
   border: 1px solid rgba(71, 85, 105, 0.18);
   border-radius: 1rem;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.35s ease;
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
 }
 
 .glass-card:hover {
@@ -64,12 +70,10 @@ code {
   inset: 0;
   opacity: 0;
   transition: opacity 0.4s ease;
-  background: radial-gradient(
-    320px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(99, 102, 241, 0.12) 0%,
-    rgba(99, 102, 241, 0.04) 40%,
-    transparent 70%
-  );
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(99, 102, 241, 0.12) 0%,
+      rgba(99, 102, 241, 0.04) 40%,
+      transparent 70%);
   z-index: 1;
 }
 
@@ -79,12 +83,10 @@ code {
 
 /* Critical card variant glow */
 .glass-card--critical .glass-glow {
-  background: radial-gradient(
-    320px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(239, 68, 68, 0.14) 0%,
-    rgba(239, 68, 68, 0.04) 40%,
-    transparent 70%
-  );
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(239, 68, 68, 0.14) 0%,
+      rgba(239, 68, 68, 0.04) 40%,
+      transparent 70%);
 }
 
 .glass-card--critical:hover {
@@ -107,7 +109,7 @@ code {
 }
 
 /* Card content must sit above the glow and blur layers */
-.glass-card > *:not(.glass-glow) {
+.glass-card>*:not(.glass-glow) {
   position: relative;
   z-index: 2;
 }
@@ -121,6 +123,7 @@ code {
     opacity: 0;
     transform: translateY(24px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -128,8 +131,13 @@ code {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .zone-modal-backdrop {
@@ -145,11 +153,27 @@ code {
    ══════════════════════════════════════════════════ */
 
 @keyframes goal-flash {
-  0%, 100% { background-color: transparent; }
-  15% { background-color: rgba(234, 179, 8, 0.2); }
-  30% { background-color: transparent; }
-  45% { background-color: rgba(234, 179, 8, 0.15); }
-  60% { background-color: transparent; }
+
+  0%,
+  100% {
+    background-color: transparent;
+  }
+
+  15% {
+    background-color: rgba(234, 179, 8, 0.2);
+  }
+
+  30% {
+    background-color: transparent;
+  }
+
+  45% {
+    background-color: rgba(234, 179, 8, 0.15);
+  }
+
+  60% {
+    background-color: transparent;
+  }
 }
 
 .goal-flash-active {
@@ -157,8 +181,15 @@ code {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { text-shadow: 0 0 4px rgba(234, 179, 8, 0.3); }
-  50%      { text-shadow: 0 0 16px rgba(234, 179, 8, 0.7), 0 0 32px rgba(234, 179, 8, 0.3); }
+
+  0%,
+  100% {
+    text-shadow: 0 0 4px rgba(234, 179, 8, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 16px rgba(234, 179, 8, 0.7), 0 0 32px rgba(234, 179, 8, 0.3);
+  }
 }
 
 .goal-text-glow {
@@ -187,16 +218,38 @@ code {
 
 /* Trend arrow animations */
 @keyframes trend-up {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-2px); }
-}
-@keyframes trend-down {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(2px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
-.trend-up   { animation: trend-up 0.8s ease-in-out; color: #f87171; }
-.trend-down { animation: trend-down 0.8s ease-in-out; color: #34d399; }
+@keyframes trend-down {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+.trend-up {
+  animation: trend-up 0.8s ease-in-out;
+  color: #f87171;
+}
+
+.trend-down {
+  animation: trend-down 0.8s ease-in-out;
+  color: #34d399;
+}
 
 /* ── CCTV Scanning overlay effect ── */
 .cctv-scanner-container {
@@ -222,6 +275,7 @@ code {
   0% {
     top: 0%;
   }
+
   100% {
     top: 100%;
   }

@@ -7,25 +7,21 @@ const CCTV_FEEDS = [
     id: "cam-01",
     label: "CAM-01 · North Gate",
     zoneKey: "Zone A (North Gate)",
-    embedUrl: "https://cdn.pixabay.com/video/2020/05/24/40061-424699566_tiny.mp4",
   },
   {
     id: "cam-02",
     label: "CAM-02 · East Concourse",
     zoneKey: "Zone B (East Concourse)",
-    embedUrl: "https://cdn.pixabay.com/video/2019/11/10/28906-372545084_tiny.mp4",
   },
   {
     id: "cam-03",
     label: "CAM-03 · South Portal",
     zoneKey: "Zone C (South Portal)",
-    embedUrl: "https://cdn.pixabay.com/video/2021/08/19/85573-590623348_tiny.mp4",
   },
   {
     id: "cam-04",
     label: "CAM-04 · VIP Gate",
     zoneKey: "Zone D (VIP Gate)",
-    embedUrl: "https://cdn.pixabay.com/video/2015/09/23/790-140228302_tiny.mp4",
   },
 ];
 
@@ -146,13 +142,9 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
               >
                 <div className="cctv-scanner-container w-full h-full">
                   <div className="cctv-scanner-line" />
-                  <video
-                    src={feed.embedUrl}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover pointer-events-none"
+                  <div
+                    className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 animate-pulse pointer-events-none"
+                    style={{ animationDuration: `${2 + Math.random() * 2}s` }}
                   />
                 </div>
                 {/* Overlay controls */}
@@ -207,17 +199,13 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
               </button>
             </div>
 
-            {/* Video */}
+            {/* Simulated CCTV Feed */}
             <div className="aspect-video w-full relative overflow-hidden bg-black">
               <div className="cctv-scanner-container w-full h-full">
                 <div className="cctv-scanner-line" />
-                <video
-                  src={expandedData.embedUrl}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
+                <div
+                  className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 animate-pulse"
+                  style={{ animationDuration: '3s' }}
                 />
               </div>
             </div>

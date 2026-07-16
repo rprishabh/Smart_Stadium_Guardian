@@ -87,8 +87,15 @@ export async function translateFanQuery(
   targetLanguage: string,
   matchPhase: string
 ): Promise<FanSpeechResultJson> {
+  /** Safe fallback returned when the API is unavailable, times out, or returns corrupt data. */
+  const fallbackResult: FanSpeechResultJson = {
+    detectedLanguage: "English",
+    englishTranslation: "Connection timed out.",
+    tacticalInstruction: "Network congested. Proceed with standard protocol.",
+  };
+
   if (!genAI) {
-    throw new Error("Gemini AI is not initialized. Please verify your REACT_APP_GEMINI_API_KEY environment variable.");
+    return fallbackResult;
   }
 
   try {
@@ -96,11 +103,21 @@ export async function translateFanQuery(
 
     const prompt = `You are a stadium security translation AI. A fan said: '${transcript}'. 1. Identify the language (even if it's written in English characters like Hinglish). 2. Translate it to English. 3. Provide a one-sentence tactical routing instruction for stadium staff. Return EXACTLY this JSON format: { "detectedLanguage": "...", "englishTranslation": "...", "tacticalInstruction": "..." }`;
 
-    const result = await model.generateContent(prompt);
+    // Race the API call against a 15-second timeout to prevent UI hangs
+    const timeoutMs = 15_000;
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Gemini API request timed out after 15 seconds.")), timeoutMs)
+    );
+
+    const result = await Promise.race([
+      model.generateContent(prompt),
+      timeoutPromise,
+    ]);
+
     const text = result.response.text();
 
     if (!text || text.trim() === "") {
-      throw new Error("Empty response received from Gemini API.");
+      return fallbackResult;
     }
 
     let cleanedText = text.trim();
@@ -122,6 +139,6 @@ export async function translateFanQuery(
     };
   } catch (error) {
     console.error("TRANSLATION API ERROR:", error);
-    throw error;
+    return fallbackResult;
   }
 }

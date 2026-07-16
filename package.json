@@ -47,8 +47,8 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.5.2",
-    "postcss": "^8.5.17",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.19",
     "react-scripts": "^5.0.1",
     "tailwindcss": "^3.4.19"
   }
