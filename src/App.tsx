@@ -11,74 +11,12 @@ import { connectWallet, awardVolunteerBadge } from "./utils/web3Service";
 import { translateFanQuery } from "./utils/geminiService";
 import { logDeploymentEvent, auth } from "./utils/firebaseConfig";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-
-const VOLUNTEER_RANKS = [
-  "Novice Steward",       // Level 1
-  "Crowd Coordinator",    // Level 2
-  "Sector Guardian",      // Level 3
-  "Flow Tactician",       // Level 4
-  "Concourse Captain",    // Level 5
-  "Safety Sentinel",      // Level 6
-  "Zone Commander",       // Level 7
-  "Operations Master",    // Level 8
-  "Stadium Elite",        // Level 9
-  "FIFA Vanguard",        // Level 10
-];
-
-const DEFAULT_BADGE_DETAILS: Record<number, { matchContext: string; sectorAction: string; hash: string }> = {
-  1: {
-    matchContext: "FIFA World Cup - Onboarding",
-    sectorAction: "Steward orientation and safety protocol onboarding completed",
-    hash: "0x12a3f8db8204e38ac9b11efec34d56789abcde01"
-  },
-  2: {
-    matchContext: "FIFA World Cup - Group Stage: Pre-Match Entry",
-    sectorAction: "Crowd diverted successfully from high occupancy ticket lanes at Sector B.",
-    hash: "0x28f6da8204e38ac9b11efec34d56789abcde02"
-  },
-  3: {
-    matchContext: "FIFA World Cup - Group Stage: Half-Time Surge",
-    sectorAction: "Assisted with translation and directions for 15+ foreign fans at Plaza 3.",
-    hash: "0x39a3f8db8204e38ac9b11efec34d56789abcde03"
-  },
-  4: {
-    matchContext: "FIFA World Cup - Group Stage: Live Play",
-    sectorAction: "Identified and resolved congestion bottleneck in East Concourse escalator.",
-    hash: "0x4af6da8204e38ac9b11efec34d56789abcde04"
-  },
-  5: {
-    matchContext: "FIFA World Cup - Knockout Phase: Pre-Match",
-    sectorAction: "Concourse routing plan implemented cleanly for maximum capacity load.",
-    hash: "0x5bf6da8204e38ac9b11efec34d56789abcde05"
-  },
-  6: {
-    matchContext: "FIFA World Cup - Knockout Phase: Post-Match",
-    sectorAction: "Rapid coordination response executed during emergency egress warning sweep.",
-    hash: "0x6cf6da8204e38ac9b11efec34d56789abcde06"
-  },
-  7: {
-    matchContext: "FIFA World Cup - Quarter Finals: Half-Time",
-    sectorAction: "Crisis management protocol established for VIP block entry checkpoint.",
-    hash: "0x7df6da8204e38ac9b11efec34d56789abcde07"
-  },
-  8: {
-    matchContext: "FIFA World Cup - Semi Finals: Live Play",
-    sectorAction: "Operations command ledger reviewed and coordinated with security coordinators.",
-    hash: "0x8ef6da8204e38ac9b11efec34d56789abcde08"
-  },
-  9: {
-    matchContext: "FIFA World Cup - Third-Place Playoff",
-    sectorAction: "Steward team assignments and shift logs audited for final matches.",
-    hash: "0x9ff6da8204e38ac9b11efec34d56789abcde09"
-  },
-  10: {
-    matchContext: "FIFA World Cup - Final Match",
-    sectorAction: "Global operations supervisor duty successfully completed. Zero safety incidents.",
-    hash: "0xa0f6da8204e38ac9b11efec34d56789abcde10"
-  }
-};
-
-
+import {
+  VOLUNTEER_RANKS,
+  DEFAULT_BADGE_DETAILS,
+  SAMPLE_TELEMETRY,
+  CROWD_PATTERNS,
+} from "./utils/mockTelemetryService";
 
 // ── Constants ──────────────────────────────────────
 const LANGUAGES = [
@@ -88,53 +26,6 @@ const LANGUAGES = [
   { label: "Arabic (العربية)", value: "Arabic" },
   { label: "German (Deutsch)", value: "German" },
   { label: "Hindi (हिन्दी)", value: "Hindi" },
-];
-
-const SAMPLE_TELEMETRY: TelemetryPoint[] = [
-  {
-    zoneId: "Zone A (North Gate)",
-    gateCapacityPercentage: 88,
-    securityThroughputPerMin: 42,
-    concessionWaitTimeMins: 18,
-    activeIncidentsCount: 1,
-    timestamp: Date.now(),
-  },
-  {
-    zoneId: "Zone B (East Concourse)",
-    gateCapacityPercentage: 55,
-    securityThroughputPerMin: 78,
-    concessionWaitTimeMins: 22,
-    activeIncidentsCount: 0,
-    timestamp: Date.now(),
-  },
-  {
-    zoneId: "Zone C (South Portal)",
-    gateCapacityPercentage: 94,
-    securityThroughputPerMin: 28,
-    concessionWaitTimeMins: 11,
-    activeIncidentsCount: 2,
-    timestamp: Date.now(),
-  },
-  {
-    zoneId: "Zone D (VIP Gate)",
-    gateCapacityPercentage: 45,
-    securityThroughputPerMin: 105,
-    concessionWaitTimeMins: 4,
-    activeIncidentsCount: 0,
-    timestamp: Date.now(),
-  },
-];
-
-// ── Crowd simulation patterns ──
-// Each pattern has target capacity ranges per zone to create realistic movement narratives
-const CROWD_PATTERNS = [
-  { name: "Pre-Match North Rush",  targets: [92, 50, 40, 35] },
-  { name: "Overflow to East",      targets: [78, 85, 45, 40] },
-  { name: "Halftime Concessions",  targets: [60, 70, 65, 55] },
-  { name: "Second Half Settled",   targets: [55, 55, 50, 45] },
-  { name: "Match End South Surge", targets: [45, 50, 95, 88] },
-  { name: "Full Evacuation",       targets: [70, 75, 85, 92] },
-  { name: "Post-Match Cooldown",   targets: [35, 40, 55, 30] },
 ];
 
 /** Clamp a number between min and max */
@@ -665,17 +556,29 @@ export default function App() {
     recognition.start();
   };
 
-  const handleManualQuerySubmit = async (e: React.FormEvent) => {
+  /**
+   * Processes manual query submissions from the translation matrix form.
+   * Performs runtime input sanitation, empty-state checking, and dispatches the translation query.
+   * 
+   * @param e Form event structure.
+   */
+  const handleManualQuerySubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!manualQueryText.trim()) return;
+    
+    // Enforce strict runtime input sanitization
+    const sanitizedQuery = manualQueryText.trim().replace(/<[^>]*>/g, "");
+    
+    if (sanitizedQuery.length === 0) {
+      setToastMessage("⚠️ Input Rejection: Fan query input cannot be empty or contain script tags.");
+      return;
+    }
 
     setIsAiLoading(true);
     setAiStatus("Online");
-    const query = manualQueryText.trim();
     
     try {
-      const result = await translateFanQuery(query, targetLanguage, matchPhase);
-      setCapturedSTT(query);
+      const result = await translateFanQuery(sanitizedQuery, targetLanguage, matchPhase);
+      setCapturedSTT(sanitizedQuery);
       setDetectedLanguage(result.detectedLanguage);
       setEnglishTranslation(result.englishTranslation);
       setTacticalInstruction(result.tacticalInstruction);
@@ -686,7 +589,7 @@ export default function App() {
       setManualQueryText("");
     } catch (err) {
       console.error("Gemini translation query error:", err);
-      setToastMessage("Network error: Gemini API translation query failed. Please try again.");
+      setToastMessage("❌ Network Exception: Gemini API translation query failed. Please try again.");
     } finally {
       setIsAiLoading(false);
     }
@@ -1098,13 +1001,12 @@ export default function App() {
 
       {/* ═══ MAIN LAYOUT ═══ */}
       <div className="flex-grow flex flex-col md:flex-row overflow-hidden">
-
         {/* ── Sidebar Control Panel (Left Pane) ── */}
-        <aside className="w-full md:w-80 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar">
+        <aside className="w-full md:w-80 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
           {/* Brand Header */}
           <div className="flex items-center gap-3 pb-4 border-b border-slate-900">
             <div className="p-2 bg-indigo-950/50 border border-indigo-500/30 rounded-lg text-indigo-400 shrink-0">
-              <svg width="32" height="32" className="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg width="32" height="32" className="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
@@ -1126,8 +1028,10 @@ export default function App() {
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-slate-500 uppercase font-mono">Volunteer Active</span>
                 <button
+                  id="signout-button"
                   onClick={handleLogout}
                   className="text-[10px] text-red-400 hover:text-red-305 underline cursor-pointer hover:font-semibold"
+                  aria-label="Sign out volunteer identity session"
                 >
                   Sign Out
                 </button>
@@ -1148,7 +1052,7 @@ export default function App() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               📊 Live Shift Metrics
             </h4>
-            <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="grid grid-cols-3 gap-2 text-center" role="status" aria-live="polite">
               <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
                 <span className="text-[16px]" title="Fans Assisted">👥</span>
                 <span className="text-[10px] text-slate-500 uppercase font-mono mt-1">Assisted</span>
@@ -1181,7 +1085,7 @@ export default function App() {
           {/* Quick Sandbox Tester */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
-              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
               Quick Sandbox
@@ -1190,8 +1094,10 @@ export default function App() {
               Load mock research metrics to test operational AI reasoning immediately.
             </p>
             <button
+              id="inject-sandbox-button"
               onClick={loadSampleTelemetry}
               className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-medium text-white shadow-lg shadow-indigo-950/50"
+              aria-label="Inject mock FIFA operations metrics scenario dataset"
             >
               Inject Scenario Dataset
             </button>
@@ -1207,6 +1113,7 @@ export default function App() {
               value={targetLanguage}
               onChange={handleLanguageChange}
               className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none transition cursor-pointer mb-3"
+              aria-label="Select target translation language"
             >
               {LANGUAGES.map((lang) => (
                 <option key={lang.value} value={lang.value}>
@@ -1215,6 +1122,7 @@ export default function App() {
               ))}
             </select>
             <button
+              id="listen-fan-button"
               onClick={handleListenToFan}
               disabled={isListening}
               className={`w-full py-1.5 border transition rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
@@ -1222,6 +1130,7 @@ export default function App() {
                   ? "bg-red-950/40 border-red-800/40 text-red-400 animate-pulse"
                   : "bg-indigo-950 hover:bg-indigo-900 border-indigo-850 text-indigo-400 hover:text-indigo-300"
               }`}
+              aria-label="Listen to fan audio query speech in real time"
             >
               {isListening ? "🎙️ Listening..." : "🎤 Listen to Fan"}
             </button>
@@ -1234,21 +1143,26 @@ export default function App() {
 
             {/* Manual Query Input Fallback */}
             <div className="mt-3 pt-3 border-t border-slate-900/60">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">
+              <label htmlFor="manual-query-input" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">
                 Or Type Fan Query Manually
-              </span>
+              </label>
               <form onSubmit={handleManualQuerySubmit} className="flex gap-2">
                 <input
+                  id="manual-query-input"
                   type="text"
                   placeholder="e.g. Washroom kaha par hai"
+                  maxLength={200}
                   value={manualQueryText}
                   onChange={(e) => setManualQueryText(e.target.value)}
                   className="flex-grow bg-slate-950 border border-slate-800 text-slate-100 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                  aria-label="Type fan speech query manually"
                 />
                 <button
+                  id="manual-translate-button"
                   type="submit"
-                  disabled={isAiLoading || !manualQueryText.trim()}
+                  disabled={isAiLoading}
                   className="px-3 bg-indigo-950 hover:bg-indigo-900 border border-indigo-850 text-indigo-400 hover:text-indigo-300 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition"
+                  aria-label="Translate manual query"
                 >
                   Translate
                 </button>
@@ -1256,7 +1170,7 @@ export default function App() {
             </div>
 
             {capturedSTT && (
-              <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs">
+              <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs" role="status" aria-live="polite">
                 <div>
                   <span className="text-[10px] text-slate-500 uppercase font-mono block">Captured STT</span>
                   <p className="text-slate-350 font-medium italic">"{capturedSTT}"</p>
@@ -1276,6 +1190,7 @@ export default function App() {
                   </div>
                 </div>
                 <button
+                  id="clear-translation-log-button"
                   onClick={() => {
                     setCapturedSTT("");
                     setDetectedLanguage("");
@@ -1283,6 +1198,7 @@ export default function App() {
                     setTacticalInstruction("");
                   }}
                   className="text-[10px] text-slate-500 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
+                  aria-label="Clear captured translation log"
                 >
                   Clear Log
                 </button>
@@ -1341,9 +1257,11 @@ export default function App() {
                 </div>
                 {currentNftLevel < 10 && tasksCompleted >= currentNftLevel * 2 && (
                   <button
+                    id="claim-badge-button"
                     onClick={() => triggerLevelUp(currentNftLevel + 1, walletAddress)}
                     disabled={isMinting}
                     className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
+                    aria-label={`Claim Level ${currentNftLevel + 1} Soulbound NFT Badge on Polygon`}
                   >
                     {isMinting ? "Minting..." : `🏆 Claim Rank ${currentNftLevel + 1} NFT`}
                   </button>
@@ -1351,8 +1269,10 @@ export default function App() {
               </div>
             ) : (
               <button
+                id="connect-wallet-sidebar-button"
                 onClick={handleConnectWallet}
                 className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-indigo-950/50 cursor-pointer"
+                aria-label="Connect MetaMask wallet to register volunteer profile"
               >
                 Connect Wallet
               </button>
@@ -1361,8 +1281,10 @@ export default function App() {
 
           {/* Infrastructure Integration Hub Button */}
           <button
+            id="connect-infra-button"
             onClick={() => setIsInfraModalOpen(true)}
             className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold shadow-lg hover:shadow-indigo-950/20 cursor-pointer flex items-center justify-center gap-1.5 shrink-0 mt-1"
+            aria-label="Connect live physical stadium IoT infrastructure"
           >
             🔌 Connect Infrastructure
           </button>
@@ -1390,7 +1312,7 @@ export default function App() {
             {/* Network Badges */}
             <div className="flex items-center gap-3 shrink-0">
               {walletAddress ? (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-950/20 border border-emerald-900/30 rounded-lg text-xs text-emerald-450">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-950/20 border border-emerald-900/30 rounded-lg text-xs text-emerald-455">
                   <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="font-mono text-[11px]" title={walletAddress}>
                     {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
@@ -1398,10 +1320,12 @@ export default function App() {
                 </div>
               ) : (
                 <button
+                  id="connect-wallet-header-button"
                   onClick={handleConnectWallet}
                   className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-300 transition cursor-pointer active:scale-95"
+                  aria-label="Connect wallet to header identity bar"
                 >
-                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-indigo-400">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-indigo-400" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   <span>Connect Wallet</span>
@@ -1834,8 +1758,10 @@ export default function App() {
             </div>
 
             <button
+              id="rank-up-continue-button"
               onClick={() => setRankUpData(null)}
-              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] transition duration-200 rounded-xl text-xs font-bold text-white shadow-xl shadow-indigo-950/40 cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition duration-200 rounded-xl text-xs font-bold text-white shadow-xl shadow-indigo-950/40 cursor-pointer flex items-center justify-center gap-1.5"
+              aria-label="Continue to operations console"
             >
               Continue Operations Console
             </button>
@@ -1844,13 +1770,13 @@ export default function App() {
       )}
       {/* ═══ ENTERPRISE INFRASTRUCTURE ONBOARDING MODAL ═══ */}
       {isInfraModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto" role="dialog" aria-labelledby="infra-modal-title">
           <div className="bg-slate-900 border border-slate-800 w-full max-w-4xl rounded-2xl p-6 sm:p-8 flex flex-col gap-6 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
             
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-4 border-b border-slate-800">
               <div>
-                <h3 className="text-lg font-black text-white tracking-wide flex items-center gap-2">
+                <h3 id="infra-modal-title" className="text-lg font-black text-white tracking-wide flex items-center gap-2">
                   🔌 Enterprise Infrastructure Onboarding
                 </h3>
                 <p className="text-xs text-slate-400 mt-1 leading-relaxed">
@@ -1858,8 +1784,10 @@ export default function App() {
                 </p>
               </div>
               <button 
+                id="close-infra-modal-x"
                 onClick={() => setIsInfraModalOpen(false)}
                 className="text-slate-500 hover:text-white text-xl font-mono cursor-pointer"
+                aria-label="Close infrastructure onboarding modal"
               >
                 ×
               </button>
@@ -1871,24 +1799,28 @@ export default function App() {
               {/* Card 1: CCTV & Vision AI Streams */}
               <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-3.5">
                 <div className="flex items-center gap-2 text-indigo-400">
-                  <span className="text-lg">📹</span>
+                  <span className="text-lg" aria-hidden="true">📹</span>
                   <strong className="text-xs uppercase tracking-wider text-slate-200">CCTV & Vision AI Streams</strong>
                 </div>
                 <p className="text-[10px] text-slate-400 leading-relaxed">
                   Connect raw RTSP surveillance video feeds. Our spatial computer vision model evaluates capacity alerts.
                 </p>
                 <div className="space-y-2">
-                  <label className="text-[9px] text-slate-450 block">RTSP Stream URLs (Comma separated)</label>
+                  <label htmlFor="rtsp-urls-input" className="text-[9px] text-slate-450 block font-semibold">RTSP Stream URLs (Comma separated)</label>
                   <input
+                    id="rtsp-urls-input"
                     type="text"
                     placeholder="rtsp://admin:pass@192.168.1.50:554/h264Preview"
                     className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                    aria-label="RTSP Stream URLs"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] text-slate-455 block">Computer Vision Model</label>
+                  <label htmlFor="cv-model-select" className="text-[9px] text-slate-455 block font-semibold">Computer Vision Model</label>
                   <select
+                    id="cv-model-select"
                     className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition cursor-pointer"
+                    aria-label="Computer Vision Model"
                   >
                     <option>Crowd Density Estimation (YOLOv8-stadium)</option>
                     <option>Incident & Vomitory Blockage Detection</option>
@@ -1896,9 +1828,11 @@ export default function App() {
                   </select>
                 </div>
                 <button
+                  id="verify-rtsp-button"
                   type="button"
                   onClick={() => alert("🔍 Verifying RTSP handshake... Connection nominal.")}
                   className="mt-auto py-1.5 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:text-white text-slate-355 rounded-lg text-[10px] transition font-semibold cursor-pointer"
+                  aria-label="Verify RTSP feed connection handshake"
                 >
                   Verify Handshake
                 </button>
@@ -1907,32 +1841,38 @@ export default function App() {
               {/* Card 2: IoT Turnstile & Gate APIs */}
               <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-3.5">
                 <div className="flex items-center gap-2 text-indigo-400">
-                  <span className="text-lg">🎟️</span>
+                  <span className="text-lg" aria-hidden="true">🎟️</span>
                   <strong className="text-xs uppercase tracking-wider text-slate-200">IoT Turnstile & Gate APIs</strong>
                 </div>
                 <p className="text-[10px] text-slate-400 leading-relaxed">
                   Ingest turnstile tick ticket validations dynamically to feed capacity analytics without file parses.
                 </p>
                 <div className="space-y-2">
-                  <label className="text-[9px] text-slate-450 block">Ticketing API Endpoint URL</label>
+                  <label htmlFor="ticketing-api-input" className="text-[9px] text-slate-450 block font-semibold">Ticketing API Endpoint URL</label>
                   <input
+                    id="ticketing-api-input"
                     type="text"
                     placeholder="https://api.worldcup.fifa.com/stadium/v1/gates"
                     className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                    aria-label="Ticketing API Endpoint URL"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] text-slate-455 block">Webhook HMAC Secret Key</label>
+                  <label htmlFor="webhook-hmac-input" className="text-[9px] text-slate-455 block font-semibold">Webhook HMAC Secret Key</label>
                   <input
+                    id="webhook-hmac-input"
                     type="password"
                     placeholder="••••••••••••••••••••••••••••••••"
                     className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                    aria-label="Webhook HMAC Secret Key"
                   />
                 </div>
                 <button
+                  id="verify-webhook-button"
                   type="button"
                   onClick={() => alert("🔑 Webhook handshake completed. API connection active.")}
                   className="mt-auto py-1.5 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:text-white text-slate-355 rounded-lg text-[10px] transition font-semibold cursor-pointer"
+                  aria-label="Verify ticketing Webhook signature"
                 >
                   Verify Webhook
                 </button>
@@ -1941,14 +1881,20 @@ export default function App() {
               {/* Card 3: Facility Digital Twin */}
               <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-3.5">
                 <div className="flex items-center gap-2 text-indigo-400">
-                  <span className="text-lg">🗺️</span>
+                  <span className="text-lg" aria-hidden="true">🗺️</span>
                   <strong className="text-xs uppercase tracking-wider text-slate-200">Facility Digital Twin</strong>
                 </div>
                 <p className="text-[10px] text-slate-400 leading-relaxed">
                   Provide GeoJSON map models so the AI routing engine maps instructions to restrooms, plazas, and exits.
                 </p>
-                <div className="flex-grow border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-lg p-4 flex flex-col items-center justify-center text-center cursor-pointer transition">
-                  <span className="text-2xl mb-1">📂</span>
+                <div 
+                  id="cad-file-upload-zone"
+                  role="button"
+                  tabIndex={0}
+                  className="flex-grow border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-lg p-4 flex flex-col items-center justify-center text-center cursor-pointer transition"
+                  aria-label="Upload stadium CAD GeoJSON or DXF file"
+                >
+                  <span className="text-2xl mb-1" aria-hidden="true">📂</span>
                   <span className="text-[10px] text-slate-305 font-bold">Stadium CAD File</span>
                   <span className="text-[8px] text-slate-500 mt-0.5">Drag & drop or browse (.geojson, .dxf)</span>
                 </div>
@@ -1957,31 +1903,31 @@ export default function App() {
               {/* Card 4: Workforce HR Sync */}
               <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-3.5">
                 <div className="flex items-center gap-2 text-indigo-400">
-                  <span className="text-lg">👥</span>
+                  <span className="text-lg" aria-hidden="true">👥</span>
                   <strong className="text-xs uppercase tracking-wider text-slate-200">Workforce HR Sync</strong>
                 </div>
                 <p className="text-[10px] text-slate-400 leading-relaxed">
                   Coordinate worker shifts. Matches live volunteers dynamically to safety tasks and blockchain reward matrices.
                 </p>
                 <div className="bg-slate-900/40 border border-slate-850 rounded-lg p-3 flex items-center justify-between">
-                  <div>
+                  <label htmlFor="sync-shift-checkbox" className="cursor-pointer">
                     <span className="text-[10px] text-slate-300 font-bold block">Sync Shift Roster (API)</span>
                     <span className="text-[8px] text-slate-500 block">Autosync staff metadata every 5 minutes</span>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-650" />
                   </label>
+                  <div className="relative inline-flex items-center">
+                    <input id="sync-shift-checkbox" type="checkbox" className="sr-only peer" defaultChecked />
+                    <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-650" />
+                  </div>
                 </div>
                 <div className="bg-slate-900/40 border border-slate-850 rounded-lg p-3 flex items-center justify-between">
-                  <div>
+                  <label htmlFor="metamask-id-checkbox" className="cursor-pointer">
                     <span className="text-[10px] text-slate-300 font-bold block">MetaMask ID Mapping</span>
                     <span className="text-[8px] text-slate-500 block">Link badges directly to payroll registry</span>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-650" />
                   </label>
+                  <div className="relative inline-flex items-center">
+                    <input id="metamask-id-checkbox" type="checkbox" className="sr-only peer" />
+                    <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-650" />
+                  </div>
                 </div>
               </div>
 
@@ -1990,19 +1936,23 @@ export default function App() {
             {/* Modal Actions */}
             <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
               <button
+                id="cancel-infra-config-button"
                 type="button"
                 onClick={() => setIsInfraModalOpen(false)}
                 className="py-2 px-4 hover:bg-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer"
+                aria-label="Cancel infrastructure onboarding"
               >
                 Cancel
               </button>
               <button
+                id="save-infra-config-button"
                 type="button"
                 onClick={() => {
                   setIsInfraModalOpen(false);
                   setToastMessage("✅ Infrastructure Linked. Dashboard calibrating to live data...");
                 }}
                 className="py-2 px-5 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-bold text-white shadow-lg shadow-indigo-950/50 cursor-pointer"
+                aria-label="Save infrastructure configuration"
               >
                 Save Configuration
               </button>
@@ -2014,9 +1964,9 @@ export default function App() {
 
       {/* Toast Notification Layer */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-slate-900/95 border border-emerald-500/40 text-emerald-450 text-xs px-4 py-3 rounded-lg shadow-xl backdrop-blur-md flex items-center gap-2">
+        <div id="toast-message-container" className="fixed top-4 right-4 z-50 bg-slate-900/95 border border-emerald-500/40 text-emerald-450 text-xs px-4 py-3 rounded-lg shadow-xl backdrop-blur-md flex items-center gap-2" role="status" aria-live="polite">
           <span>{toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} className="text-emerald-500 hover:text-white ml-2 text-sm font-bold">×</button>
+          <button id="close-toast-button" onClick={() => setToastMessage(null)} className="text-emerald-500 hover:text-white ml-2 text-sm font-bold" aria-label="Close notification toast">×</button>
         </div>
       )}
     </div>

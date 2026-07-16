@@ -111,7 +111,7 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
       <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
@@ -131,9 +131,18 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
 
             return (
               <div
+                id={`cctv-tile-${feed.id}`}
                 key={feed.id}
                 className="cctv-tile aspect-video relative group overflow-hidden"
+                role="button"
+                tabIndex={0}
+                aria-label={`Open expanded live feed for ${feed.label}`}
                 onClick={() => setExpandedFeed(feed.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    setExpandedFeed(feed.id);
+                  }
+                }}
               >
                 <div className="cctv-scanner-container w-full h-full">
                   <div className="cctv-scanner-line" />
@@ -175,21 +184,24 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
           className="fixed inset-0 z-50 flex items-center justify-center p-4 zone-modal-backdrop"
           style={{ backgroundColor: "rgba(2, 6, 23, 0.85)", backdropFilter: "blur(16px)" }}
           onClick={(e) => { if (e.target === e.currentTarget) setExpandedFeed(null); }}
+          role="dialog"
+          aria-labelledby="cctv-modal-title"
         >
           <div className="zone-modal-content w-full max-w-3xl bg-slate-900/95 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
             {/* Header */}
             <div className="px-5 py-3 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
-                <h3 className="text-sm font-bold text-white">{expandedData.label}</h3>
+                <h3 id="cctv-modal-title" className="text-sm font-bold text-white">{expandedData.label}</h3>
                 <span className="text-[10px] text-red-400 font-semibold uppercase">Live Feed</span>
               </div>
               <button
+                id="close-cctv-modal-button"
                 onClick={() => setExpandedFeed(null)}
                 className="text-slate-400 hover:text-white transition p-1 rounded-lg hover:bg-slate-800"
                 aria-label="Close expanded view"
               >
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -217,7 +229,7 @@ const CCTVGrid: React.FC<CCTVGridProps> = ({ telemetry }) => {
               return (
                 <div className="px-5 py-3 border-t border-slate-800 bg-slate-950/50">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <svg width="14" height="14" className="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg width="14" height="14" className="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                     <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold">

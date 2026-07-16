@@ -1,4 +1,24 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { z } from "zod";
+
+/**
+ * 🔒 Zod Schema to strictly validate the JSON response structure from the Gemini translation engine.
+ * Ensures the response matches our frontend interface precisely at runtime.
+ */
+export const FanSpeechSchema = z.object({
+  detectedLanguage: z.string().min(1, "Detected language must be a non-empty string."),
+  englishTranslation: z.string().min(1, "English translation must be a non-empty string."),
+  tacticalInstruction: z.string().min(1, "Tactical instruction must be a non-empty string."),
+});
+
+/**
+ * 📝 TypeScript interface matching the validated FanSpeechSchema shape.
+ */
+export interface FanSpeechResultJson {
+  detectedLanguage: string;
+  englishTranslation: string;
+  tacticalInstruction: string;
+}
 
 const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "";
 const hasValidApiKey = apiKey && apiKey !== "your_gemini_api_key_here" && apiKey.trim() !== "";
@@ -17,7 +37,9 @@ if (hasValidApiKey) {
  * 
  * @param capacity Current zone capacity utilization percentage.
  * @param incidents Number of active security/safety incidents.
- * @returns Strict 2-sentence tactical recommendation string.
+ * @param timelineState The current phase of the match timeline (e.g. Pre-Match, Half-Time).
+ * @param criticalSector The sector identification string under review.
+ * @returns {Promise<string>} A promise resolving to a strict 2-sentence tactical recommendation string.
  */
 export async function generateCrowdAdvice(
   capacity: number,
@@ -50,15 +72,15 @@ export async function generateCrowdAdvice(
   }
 }
 
-export interface FanSpeechResultJson {
-  detectedLanguage: string;
-  englishTranslation: string;
-  tacticalInstruction: string;
-}
-
 /**
- * Translates a fan query (including Hinglish/script mixing) to English
- * and provides structured tactical instruction.
+ * Translates a fan speech transcript (including Hinglish or script mixing) to English,
+ * then structures a tactical routing instruction for security staff. Enforces Zod schema validation.
+ * 
+ * @param transcript Raw speech-to-text text captured from the fan query.
+ * @param targetLanguage Target display language (e.g. English, Spanish).
+ * @param matchPhase Current match operational phase.
+ * @returns {Promise<FanSpeechResultJson>} A promise resolving to the structured translation and instruction object.
+ * @throws {Error} Throws validation errors if JSON format is corrupt or missing fields.
  */
 export async function translateFanQuery(
   transcript: string,
@@ -88,12 +110,15 @@ export async function translateFanQuery(
     }
     cleanedText = cleanedText.trim();
 
-    const parsed = JSON.parse(cleanedText);
+    const parsedJson = JSON.parse(cleanedText);
+    
+    // Enforce strict schema constraints at runtime
+    const validated = FanSpeechSchema.parse(parsedJson);
 
     return {
-      detectedLanguage: parsed.detectedLanguage || "Unknown",
-      englishTranslation: parsed.englishTranslation || transcript,
-      tacticalInstruction: parsed.tacticalInstruction || "Direct the fan to the nearest security or info checkpoint."
+      detectedLanguage: validated.detectedLanguage,
+      englishTranslation: validated.englishTranslation,
+      tacticalInstruction: validated.tacticalInstruction
     };
   } catch (error) {
     console.error("TRANSLATION API ERROR:", error);

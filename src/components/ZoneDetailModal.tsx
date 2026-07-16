@@ -26,6 +26,13 @@ function getIoTSuggestion(point: TelemetryPoint): string {
   return `✅ NOMINAL: ${point.zoneId} operating within normal parameters at ${cap}% capacity. Throughput is healthy at ${point.securityThroughputPerMin}/min. No volunteer redeployment required at this time.`;
 }
 
+/**
+ * 🛠️ ZoneDetailModal Component
+ * Renders detailed metrics, capacities, incident statuses, and strategic directives for a specific zone.
+ * Enforces accessibility guidelines and keyboard interactions.
+ * 
+ * @param props Component properties interface.
+ */
 const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => {
   const isBottleneck = point.gateCapacityPercentage > 80;
   const hasIncidents = point.activeIncidentsCount > 0;
@@ -57,6 +64,8 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 zone-modal-backdrop"
       style={{ backgroundColor: "rgba(2, 6, 23, 0.82)", backdropFilter: "blur(16px)" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-labelledby="zone-modal-title"
     >
       <div className="zone-modal-content w-full max-w-lg bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
         {/* Modal Header */}
@@ -64,14 +73,15 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`h-3 w-3 rounded-full ${isCritical ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
-              <h2 className="text-lg font-bold text-white">{point.zoneId}</h2>
+              <h2 id="zone-modal-title" className="text-lg font-bold text-white">{point.zoneId}</h2>
             </div>
             <button
+              id="close-zone-modal-button"
               onClick={onClose}
               className="text-slate-400 hover:text-white transition p-1 rounded-lg hover:bg-slate-800"
               aria-label="Close modal"
             >
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -123,7 +133,7 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
           {/* IoT Crowd Intelligence Suggestion */}
           <div className="bg-indigo-950/20 border border-indigo-900/30 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
               <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold">
@@ -142,8 +152,10 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
             Last updated: {new Date(point.timestamp).toLocaleTimeString()}
           </span>
           <button
+            id="close-zone-modal-bottom-button"
             onClick={onClose}
-            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 transition rounded-lg text-xs font-semibold text-white"
+            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 transition rounded-lg text-xs font-semibold text-white cursor-pointer"
+            aria-label="Close details modal"
           >
             Close
           </button>

@@ -27,6 +27,11 @@ Live Application Link: https://smart-stadium-guardians.web.app/
 * **Polygon Amoy Audit Trail:** To prevent log tampering during high-stakes security threats, all critical capacity updates and active incidents are committed directly to the Polygon Amoy Testnet via Web3 smart contracts.
 * **Soulbound ERC-1155 Rewards:** Volunteers connect their decentralized MetaMask identity to unlock untransferable Soulbound tokens (SBTs) that track their operational achievements, transforming volunteer management into a transparent, gamified pipeline.
 
+### 4. AI Operational Robustness & Architectural Elegance
+* **Strict Constraint-Driven Component Architecture:** Component rendering separates functional logic, layout rendering, and mock datasets into strict boundaries. Design themes are mapped systematically to CSS variables to enforce premium, high-contrast visual clarity.
+* **Zod LLM Output Validation:** Employs strict `zod` schema parsing on Google Gemini 3.5 Flash JSON output structures. If the model returns malformed JSON, Zod immediately flags validation errors, keeping the data models deterministic and preventing downstream parsing failures.
+* **Input Boundary Scanning & Graceful Failure:** Defends the console dashboard using a robust React `ErrorBoundary` wrapper that intercepts runtime crashes. Cleans and sanitizes inputs via regex boundaries (`maxLength={200}`) to block scripting vectors, malformed unicode characters, or emoji floods from causing crash exceptions.
+
 ---
 
 ## 🛠️ How to Run & Verify Functionality
