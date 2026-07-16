@@ -1,0 +1,12 @@
+# Stadium Guardian Operations Center
+
+An AI-powered, Web3-enabled command dashboard optimized for mega-event crowd control and multilingual telemetry processing.
+
+## Core Architecture
+* [Live Application](https://smart-stadium-guardians.web.app/)
+* [Source Code Repository](https://github.com/)
+* [Google Gemini API Integration](https://ai.google.dev/)
+* [Polygon Blockchain Ledger](https://polygon.technology/)
+
+## System Capabilities
+Real-time streaming parsing, automated crowd anomaly vectoring via Gemini 3.5 Flash, decentralized workforce gamification via ERC-1155 tokens, and Web Speech matrix translations.

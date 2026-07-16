@@ -902,10 +902,10 @@ export default function App() {
         {/* Main Timeline Feed */}
         <div className="flex-grow overflow-y-auto pr-1 custom-scrollbar space-y-4">
           {shiftLogs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-slate-500 py-12">
+            <div className="flex flex-col items-center justify-center h-full text-slate-300 py-12">
               <span className="text-3xl mb-2">⏱️</span>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Timeline Empty</p>
-              <p className="text-[10px] text-slate-500 mt-1">Shift logs will populate as actions occur.</p>
+              <p className="text-[10px] text-slate-300 mt-1">Shift logs will populate as actions occur.</p>
             </div>
           ) : (
             <div className="relative border-l border-slate-800 ml-4 pl-6 space-y-6 py-2">
@@ -938,7 +938,7 @@ export default function App() {
 
                     {/* Log Header */}
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[9px] uppercase tracking-widest font-black font-mono text-slate-500">
+                      <span className="text-[9px] uppercase tracking-widest font-black font-mono text-slate-300">
                         {log.time}
                       </span>
                       <span className={`text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${
@@ -971,7 +971,7 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col font-sans select-none antialiased">
+    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col font-sans select-none antialiased">
 
       {/* ═══ LIVE MATCH SCORE TICKER ═══ */}
       <div
@@ -986,7 +986,7 @@ export default function App() {
             <span className="text-lg font-black font-mono text-white">
               {scoreboard.home}
             </span>
-            <span className="text-slate-500 font-mono">—</span>
+            <span className="text-slate-300 font-mono">—</span>
             <span className="text-lg font-black font-mono text-white">
               {scoreboard.away}
             </span>
@@ -1073,7 +1073,7 @@ export default function App() {
                 <span className="text-[16px]" title="Distance Covered">📍</span>
                 <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Distance</span>
                 <span className="text-[11px] font-black text-cyan-400 font-mono tracking-tight mt-1">
-                  {distanceCovered.toFixed(2)} <span className="text-[8px] text-slate-500">km</span>
+                  {distanceCovered.toFixed(2)} <span className="text-[8px] text-slate-300">km</span>
                 </span>
               </div>
             </div>
@@ -1143,7 +1143,7 @@ export default function App() {
 
             {/* Manual Query Input Fallback */}
             <div className="mt-3 pt-3 border-t border-slate-900/60">
-              <label htmlFor="manual-query-input" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">
+              <label htmlFor="manual-query-input" className="text-[10px] text-slate-300 font-bold uppercase tracking-wider block mb-2">
                 Or Type Fan Query Manually
               </label>
               <form onSubmit={handleManualQuerySubmit} className="flex gap-2">
@@ -1172,12 +1172,12 @@ export default function App() {
             {capturedSTT && (
               <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs" role="status" aria-live="polite">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-mono block">Captured STT</span>
+                  <span className="text-[10px] text-slate-300 uppercase font-mono block">Captured STT</span>
                   <p className="text-slate-350 font-medium italic">"{capturedSTT}"</p>
                 </div>
                 <div className="border-t border-slate-900 pt-2 space-y-1.5">
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-mono block">Detected Script/Language</span>
+                    <span className="text-[10px] text-slate-300 uppercase font-mono block">Detected Script/Language</span>
                     <span className="text-emerald-455 font-semibold">{detectedLanguage}</span>
                   </div>
                   <div>
@@ -1197,7 +1197,7 @@ export default function App() {
                     setEnglishTranslation("");
                     setTacticalInstruction("");
                   }}
-                  className="text-[10px] text-slate-500 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
+                  className="text-[10px] text-slate-300 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
                   aria-label="Clear captured translation log"
                 >
                   Clear Log
@@ -1233,11 +1233,11 @@ export default function App() {
                 {VOLUNTEER_RANKS[currentNftLevel - 1] || "Novice Steward"}
               </p>
               {currentNftLevel < 10 ? (
-                <span className="text-[9px] text-slate-500 mt-0.5">
+                <span className="text-[9px] text-slate-300 mt-0.5">
                   Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> / {currentNftLevel * 2} for Lvl {currentNftLevel + 1}
                 </span>
               ) : (
-                <span className="text-[9px] text-slate-500 mt-0.5">
+                <span className="text-[9px] text-slate-300 mt-0.5">
                   Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> (Max Level Reached)
                 </span>
               )}
@@ -1250,7 +1250,7 @@ export default function App() {
             {walletAddress ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs bg-slate-950/60 p-2 rounded-lg border border-slate-900">
-                  <span className="text-[10px] text-slate-500 font-mono">Address</span>
+                  <span className="text-[10px] text-slate-300 font-mono">Address</span>
                   <span className="text-emerald-400 font-mono font-semibold" title={walletAddress}>
                     {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
                   </span>
@@ -1260,7 +1260,7 @@ export default function App() {
                     id="claim-badge-button"
                     onClick={() => triggerLevelUp(currentNftLevel + 1, walletAddress)}
                     disabled={isMinting}
-                    className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
                     aria-label={`Claim Level ${currentNftLevel + 1} Soulbound NFT Badge on Polygon`}
                   >
                     {isMinting ? "Minting..." : `🏆 Claim Rank ${currentNftLevel + 1} NFT`}
@@ -1291,7 +1291,7 @@ export default function App() {
         </aside>
 
         {/* ── Main Workspace (Right Pane) ── */}
-        <div className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
+        <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
 
           {/* Top Operations Header */}
           <header className="border-b border-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950/60 backdrop-blur shrink-0">
@@ -1300,7 +1300,7 @@ export default function App() {
                 FIFA World Cup 2026 Operations Console
               </h2>
               <div className="flex items-center gap-3 mt-0.5">
-                <p className="text-xs text-slate-500">Real-Time Smart Crowd & Security Monitoring Panel</p>
+                <p className="text-xs text-slate-300">Real-Time Smart Crowd & Security Monitoring Panel</p>
                 {telemetry && (
                   <span className="text-[10px] text-indigo-400 bg-indigo-950/30 border border-indigo-900/30 px-2 py-0.5 rounded font-mono font-medium">
                     📊 {currentPattern.name}
@@ -1372,13 +1372,13 @@ export default function App() {
                 {telemetry === null ? (
                   /* Initial Uninitialized Screen */
                   <div className="flex-grow flex flex-col items-center justify-center border border-slate-900 bg-slate-950/40 rounded-2xl p-12 text-center select-text">
-                    <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 mb-4 animate-pulse">
+                    <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-300 mb-4 animate-pulse">
                       <svg width="32" height="32" className="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                       </svg>
                     </div>
                     <h2 className="text-md font-semibold text-slate-200 mb-2">Workspace Uninitialized</h2>
-                    <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                    <p className="text-xs text-slate-300 max-w-sm mx-auto leading-relaxed">
                       Awaiting pluggable CSV metrics array upload to initiate AI operational reasoning matrix...
                     </p>
                     <button
@@ -1394,7 +1394,7 @@ export default function App() {
                     {/* Match State Timeline Selector */}
                     <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div className="flex flex-col">
-                        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold font-mono">Operations Timeline</span>
+                        <span className="text-[10px] text-slate-300 uppercase tracking-widest font-bold font-mono">Operations Timeline</span>
                         <h4 className="text-xs font-semibold text-slate-350 mt-0.5">Match Context Shifts (Simulated Dynamics)</h4>
                       </div>
                       <div className="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-900 w-full sm:w-auto">
@@ -1500,7 +1500,7 @@ export default function App() {
                           <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded border flex items-center gap-1 transition ${
                             aiStatus === "Online"
                               ? "text-emerald-400 bg-emerald-950/20 border-emerald-900/30"
-                              : "text-slate-500 bg-slate-950 border-slate-800"
+                              : "text-slate-300 bg-slate-950 border-slate-800"
                           }`}>
                             <span className={`h-1.5 w-1.5 rounded-full ${aiStatus === "Online" ? "bg-emerald-400 animate-pulse" : "bg-slate-600"}`} />
                             {aiStatus}
@@ -1541,9 +1541,9 @@ export default function App() {
                               {(aiRecommendation || aiDirective) || "Pending telemetry generation..."}
                             </p>
                           </div>
-                           <div className="mt-4 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-900 pt-3">
+                           <div className="mt-4 flex items-center justify-between text-[10px] text-slate-300 border-t border-slate-900 pt-3">
                             <span>Configured Language: <strong className="text-slate-400">{targetLanguage}</strong></span>
-                            <span className="text-[10px] text-slate-500 italic">
+                            <span className="text-[10px] text-slate-300 italic">
                               Calculated thresholds: Capacity &gt; 80% | Incidents &gt; 0
                             </span>
                           </div>
@@ -1607,7 +1607,7 @@ export default function App() {
                                 />
                               </div>
 
-                              <span className="text-[9px] font-mono text-slate-500 block mb-1">
+                              <span className="text-[9px] font-mono text-slate-300 block mb-1">
                                 Level {badgeLevel}
                               </span>
                               <span className="text-[10px] font-bold text-slate-200 leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
@@ -1618,19 +1618,19 @@ export default function App() {
                               {isUnlocked ? (
                                 <div className="w-full text-left mt-2 pt-2 border-t border-slate-900/60 space-y-1.5 text-[9px] font-medium text-slate-400">
                                   <div>
-                                    <span className="text-[8px] text-slate-500 block">Match Context</span>
+                                    <span className="text-[8px] text-slate-300 block">Match Context</span>
                                     <span className="text-slate-350 leading-tight block font-semibold text-left">
                                       {receipt?.matchContext || DEFAULT_BADGE_DETAILS[badgeLevel]?.matchContext}
                                     </span>
                                   </div>
                                   <div>
-                                    <span className="text-[8px] text-slate-500 block">Sector Action</span>
+                                    <span className="text-[8px] text-slate-300 block">Sector Action</span>
                                     <span className="text-slate-350 leading-tight block font-semibold text-left">
                                       {receipt?.sectorAction || DEFAULT_BADGE_DETAILS[badgeLevel]?.sectorAction}
                                     </span>
                                   </div>
                                   <div>
-                                    <span className="text-[8px] text-slate-500 block">On-Chain Record</span>
+                                    <span className="text-[8px] text-slate-300 block">On-Chain Record</span>
                                     <a
                                       href={`https://amoy.polygonscan.com/tx/${receipt?.hash || DEFAULT_BADGE_DETAILS[badgeLevel]?.hash}`}
                                       target="_blank"
@@ -1674,7 +1674,7 @@ export default function App() {
             </aside>
 
           </div>
-        </div>
+        </main>
       </div>
 
       {/* ═══ Zone Detail Modal ═══ */}
@@ -1746,7 +1746,7 @@ export default function App() {
             </div>
 
             <div className="w-full bg-slate-950/80 p-3.5 rounded-xl border border-slate-900/60 flex flex-col gap-1.5 items-center">
-              <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Polygon Cryptographic Receipt</span>
+              <span className="text-[9px] text-slate-300 uppercase tracking-widest font-bold">Polygon Cryptographic Receipt</span>
               <a
                 href={`https://amoy.polygonscan.com/tx/${rankUpData.hash}`}
                 target="_blank"
@@ -1786,7 +1786,7 @@ export default function App() {
               <button 
                 id="close-infra-modal-x"
                 onClick={() => setIsInfraModalOpen(false)}
-                className="text-slate-500 hover:text-white text-xl font-mono cursor-pointer"
+                className="text-slate-300 hover:text-white text-xl font-mono cursor-pointer"
                 aria-label="Close infrastructure onboarding modal"
               >
                 ×
@@ -1896,7 +1896,7 @@ export default function App() {
                 >
                   <span className="text-2xl mb-1" aria-hidden="true">📂</span>
                   <span className="text-[10px] text-slate-305 font-bold">Stadium CAD File</span>
-                  <span className="text-[8px] text-slate-500 mt-0.5">Drag & drop or browse (.geojson, .dxf)</span>
+                  <span className="text-[8px] text-slate-300 mt-0.5">Drag & drop or browse (.geojson, .dxf)</span>
                 </div>
               </div>
 
@@ -1912,7 +1912,7 @@ export default function App() {
                 <div className="bg-slate-900/40 border border-slate-850 rounded-lg p-3 flex items-center justify-between">
                   <label htmlFor="sync-shift-checkbox" className="cursor-pointer">
                     <span className="text-[10px] text-slate-300 font-bold block">Sync Shift Roster (API)</span>
-                    <span className="text-[8px] text-slate-500 block">Autosync staff metadata every 5 minutes</span>
+                    <span className="text-[8px] text-slate-300 block">Autosync staff metadata every 5 minutes</span>
                   </label>
                   <div className="relative inline-flex items-center">
                     <input id="sync-shift-checkbox" type="checkbox" className="sr-only peer" defaultChecked />
@@ -1922,7 +1922,7 @@ export default function App() {
                 <div className="bg-slate-900/40 border border-slate-850 rounded-lg p-3 flex items-center justify-between">
                   <label htmlFor="metamask-id-checkbox" className="cursor-pointer">
                     <span className="text-[10px] text-slate-300 font-bold block">MetaMask ID Mapping</span>
-                    <span className="text-[8px] text-slate-500 block">Link badges directly to payroll registry</span>
+                    <span className="text-[8px] text-slate-300 block">Link badges directly to payroll registry</span>
                   </label>
                   <div className="relative inline-flex items-center">
                     <input id="metamask-id-checkbox" type="checkbox" className="sr-only peer" />
@@ -1969,6 +1969,6 @@ export default function App() {
           <button id="close-toast-button" onClick={() => setToastMessage(null)} className="text-emerald-500 hover:text-white ml-2 text-sm font-bold" aria-label="Close notification toast">×</button>
         </div>
       )}
-    </main>
+    </div>
   );
 }
