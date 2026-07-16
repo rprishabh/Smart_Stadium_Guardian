@@ -1055,9 +1055,9 @@ export default function App() {
 
           {/* Live Shift Metrics Card */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               📊 Live Shift Metrics
-            </h4>
+            </h2>
             <div className="grid grid-cols-3 gap-2 text-center" role="status" aria-live="polite">
               <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
                 <span className="text-[16px]" title="Fans Assisted">👥</span>
@@ -1090,12 +1090,12 @@ export default function App() {
 
           {/* Quick Sandbox Tester */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
               <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
               Quick Sandbox
-            </h4>
+            </h2>
             <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
               Load mock research metrics to test operational AI reasoning immediately.
             </p>
@@ -1214,12 +1214,12 @@ export default function App() {
 
           {/* Web3 Volunteer Rewards Control Panel */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <svg width="16" height="16" className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v3m12-3V9a2 2 0 00-2-2h-3m-3 4H9M9 3h3" />
               </svg>
               Volunteer Rewards
-            </h4>
+            </h2>
             
             {/* Styled Badge Visual Wrapper */}
             <div className="relative overflow-hidden bg-gradient-to-br from-indigo-950/60 to-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-lg min-h-[140px] group">
@@ -1401,7 +1401,7 @@ export default function App() {
                     <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div className="flex flex-col">
                         <span className="text-[10px] text-slate-300 uppercase tracking-widest font-bold font-mono">Operations Timeline</span>
-                        <h4 className="text-xs font-semibold text-slate-350 mt-0.5">Match Context Shifts (Simulated Dynamics)</h4>
+                        <h3 className="text-xs font-semibold text-slate-350 mt-0.5">Match Context Shifts (Simulated Dynamics)</h3>
                       </div>
                       <div className="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-900 w-full sm:w-auto">
                         {(["Pre-Match", "Live Play", "Half-Time", "Post-Match"] as const).map((state) => (
