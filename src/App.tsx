@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from "react";
 import { DataIngestion } from "./components/DataIngestion";
-import { SecurityLog, SecurityIncidentLog } from "./components/SecurityLog";
+import type { SecurityIncidentLog } from "./components/SecurityLog";
+
 import { evaluateStadiumMetrics } from "./utils/geminiEngine";
 import { logIncidentToLedger } from "./utils/ledger";
 import { TelemetryPoint } from "./types/telemetry";
 import ZoneCard from "./components/ZoneCard";
 import ZoneDetailModal from "./components/ZoneDetailModal";
-import CCTVGrid from "./components/CCTVGrid";
+
 import { connectWallet, awardVolunteerBadge } from "./utils/web3Service";
 import { translateFanQuery } from "./utils/geminiService";
 import { logDeploymentEvent, auth } from "./utils/firebaseConfig";
@@ -17,6 +18,9 @@ import {
   SAMPLE_TELEMETRY,
   CROWD_PATTERNS,
 } from "./utils/mockTelemetryService";
+
+const SecurityLog = lazy(() => import("./components/SecurityLog").then(module => ({ default: module.SecurityLog })));
+const CCTVGrid = lazy(() => import("./components/CCTVGrid"));
 
 // ── Constants ──────────────────────────────────────
 const LANGUAGES = [
@@ -1432,7 +1436,9 @@ export default function App() {
                     </div>
 
                     {/* CCTV Surveillance Grid */}
-                    <CCTVGrid telemetry={telemetry} />
+                    <Suspense fallback={<div className="text-slate-400 text-xs p-4">Loading interface...</div>}>
+                      <CCTVGrid telemetry={telemetry} />
+                    </Suspense>
 
                     {/* Multi-Sector Operations Layout */}
                     <div className="bg-slate-900/30 border border-slate-900 rounded-2xl p-6 flex flex-col gap-4">
@@ -1663,14 +1669,18 @@ export default function App() {
               {/* Mobile Block Explorer logs tab view */}
               <div className={`flex-grow ${activeTab === "blockchain" ? "block" : "hidden lg:hidden"} space-y-6`}>
                 {renderTimeline()}
-                <SecurityLog logs={logs} />
+                <Suspense fallback={<div className="text-slate-400 text-xs p-4">Loading logs...</div>}>
+                  <SecurityLog logs={logs} />
+                </Suspense>
               </div>
             </section>
 
             {/* Right Sidebar Audit Log (Desktop Pane) */}
             <aside className="w-full lg:w-96 border-l border-slate-900 bg-slate-950 p-6 hidden lg:flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar">
               {renderTimeline()}
-              <SecurityLog logs={logs} />
+              <Suspense fallback={<div className="text-slate-400 text-xs p-4">Loading logs...</div>}>
+                <SecurityLog logs={logs} />
+              </Suspense>
             </aside>
 
           </div>
