@@ -32,7 +32,7 @@ export async function generateCrowdAdvice(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
     const prompt = `You are a FIFA World Cup stadium AI. The active match state timeline is "${timelineState}" and the sector under review is "${criticalSector}". The sector is currently at ${capacity}% capacity with ${incidents} active incidents. Give a strict 2-sentence tactical recommendation for the ground volunteers managing this specific sector.`;
 
@@ -70,7 +70,7 @@ export async function translateFanQuery(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
     const prompt = `You are a stadium security translation AI. A fan said: '${transcript}'. 1. Identify the language (even if it's written in English characters like Hinglish). 2. Translate it to English. 3. Provide a one-sentence tactical routing instruction for stadium staff. Return EXACTLY this JSON format: { "detectedLanguage": "...", "englishTranslation": "...", "tacticalInstruction": "..." }`;
 

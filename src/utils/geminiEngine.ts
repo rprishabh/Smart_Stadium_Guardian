@@ -39,7 +39,7 @@ export async function evaluateStadiumMetrics(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
     // Format the telemetry data cleanly for prompt digestion
     const serializedMetrics = telemetry

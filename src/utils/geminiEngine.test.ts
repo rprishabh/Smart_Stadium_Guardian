@@ -52,7 +52,7 @@ describe("Gemini 1.5 Pro AI Reasoning Engine Tests", () => {
 
     const directive = await evaluateStadiumMetrics(sampleTelemetryArray, "English", mockCctvUrl);
 
-    expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: "gemini-2.5-flash" });
+    expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: "gemini-3.5-flash" });
     expect(mockGenerateContent).toHaveBeenCalled();
     expect(directive).toBe(mockOutputText);
   });
