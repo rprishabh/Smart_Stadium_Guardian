@@ -34,6 +34,15 @@ Live Application Link: https://smart-stadium-guardians.web.app/
 
 ---
 
+## 📐 Architectural Elegance & Edge Case Handling
+To ensure enterprise-grade reliability, Stadium Guardian is built with constraint-driven component architecture:
+* **LLM Output Validation:** All dynamic JSON responses from the Gemini 3.5 Flash engine are strictly validated using **Zod schemas** at runtime. This prevents malformed AI hallucinations from breaking the React state.
+* **Input Boundary Scanning:** The Telemetry Pipeline and Translation Matrix feature aggressive input sanitation, gracefully catching unicode injections, empty payloads, and character-limit breaches without system crashes.
+* **Modular Service Decomposition:** Core telemetry ingestion, Web3 audit logging, and AI routing logic are decoupled into isolated service layers, ensuring maintainability and scalability for distributed deployment.
+* **State Integrity:** The application utilizes Global Error Boundaries to ensure that compound edge scenarios (e.g., network failure during a state transition) fail gracefully without corrupting the operational command view.
+
+---
+
 ## 🛠️ How to Run & Verify Functionality
 
 1. **Onboard Infrastructure:** Click the `Connect Infrastructure` dashboard element to view the enterprise turnstile hooks and Vision AI setup.
