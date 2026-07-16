@@ -6,10 +6,6 @@ import { evaluateStadiumMetrics } from "./utils/geminiEngine";
 import { logIncidentToLedger } from "./utils/ledger";
 import { TelemetryPoint } from "./types/telemetry";
 import ZoneCard from "./components/ZoneCard";
-import ZoneDetailModal from "./components/ZoneDetailModal";
-
-import { connectWallet, awardVolunteerBadge } from "./utils/web3Service";
-import { translateFanQuery } from "./utils/geminiService";
 import { logDeploymentEvent, auth } from "./utils/firebaseConfig";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import {
@@ -21,6 +17,7 @@ import {
 
 const SecurityLog = lazy(() => import("./components/SecurityLog").then(module => ({ default: module.SecurityLog })));
 const CCTVGrid = lazy(() => import("./components/CCTVGrid"));
+const ZoneDetailModal = lazy(() => import("./components/ZoneDetailModal"));
 
 // ── Constants ──────────────────────────────────────
 const LANGUAGES = [
@@ -233,6 +230,7 @@ export default function App() {
 
   const handleConnectWallet = async () => {
     try {
+      const { connectWallet } = await import("./utils/web3Service");
       const address = await connectWallet();
       if (address) {
         setWalletAddress(address);
@@ -285,6 +283,7 @@ export default function App() {
     setIsMinting(true);
     try {
       alert(`🏆 LEVEL UP! Initiating Soulbound Badge minting for Level ${targetLevel} (${VOLUNTEER_RANKS[targetLevel - 1]}). Please confirm the transaction in MetaMask.`);
+      const { awardVolunteerBadge } = await import("./utils/web3Service");
       const hash = await awardVolunteerBadge(userAddr, targetLevel);
       if (hash) {
         setCurrentNftLevel(targetLevel);
@@ -475,6 +474,7 @@ export default function App() {
       setAiStatus("Online");
       
       try {
+        const { translateFanQuery } = await import("./utils/geminiService");
         const result = await translateFanQuery(simulatedPhrase, targetLanguage, matchPhase);
         setCapturedSTT(simulatedPhrase);
         setDetectedLanguage(result.detectedLanguage);
@@ -525,6 +525,7 @@ export default function App() {
       setAiStatus("Online");
 
       try {
+        const { translateFanQuery } = await import("./utils/geminiService");
         const result = await translateFanQuery(transcript, targetLanguage, matchPhase);
         setCapturedSTT(transcript);
         setDetectedLanguage(result.detectedLanguage);
@@ -581,6 +582,7 @@ export default function App() {
     setAiStatus("Online");
     
     try {
+      const { translateFanQuery } = await import("./utils/geminiService");
       const result = await translateFanQuery(sanitizedQuery, targetLanguage, matchPhase);
       setCapturedSTT(sanitizedQuery);
       setDetectedLanguage(result.detectedLanguage);
@@ -1689,10 +1691,12 @@ export default function App() {
 
       {/* ═══ Zone Detail Modal ═══ */}
       {selectedZone && (
-        <ZoneDetailModal
-          point={selectedZone}
-          onClose={() => setSelectedZone(null)}
-        />
+        <Suspense fallback={null}>
+          <ZoneDetailModal
+            point={selectedZone}
+            onClose={() => setSelectedZone(null)}
+          />
+        </Suspense>
       )}
 
       {/* 🏆 Rank Up Banner Modal Overlay */}
