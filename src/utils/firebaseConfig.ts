@@ -13,7 +13,7 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("Checking API Key: ", process.env.REACT_APP_FIREBASE_API_KEY);
+
 // Initialize Firebase Core Engine
 const app = initializeApp(firebaseConfig);
 

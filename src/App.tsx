@@ -799,9 +799,9 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 justify-center">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 justify-center">
               👤 Volunteer Identity Portal
-            </h4>
+            </h2>
             <form onSubmit={handleLogin} className="space-y-4 text-xs">
               <p className="text-[11px] text-slate-400 leading-relaxed text-center">
                 Sign in with your Firebase volunteer credentials to authenticate.
@@ -821,7 +821,7 @@ export default function App() {
                   onChange={(e) => setPasswordInput(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                 />
-                <span className="text-[9px] text-slate-500 leading-tight block pt-0.5 text-center">
+                <span className="text-[9px] text-slate-400 leading-tight block pt-0.5 text-center">
                   For manual testing, credentials are: <strong className="text-slate-400">volunteer1@stadium.com / password123</strong>
                 </span>
               </div>
@@ -971,7 +971,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col font-sans select-none antialiased">
+    <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col font-sans select-none antialiased">
 
       {/* ═══ LIVE MATCH SCORE TICKER ═══ */}
       <div
@@ -1021,12 +1021,12 @@ export default function App() {
           </div>
           {/* Volunteer Identity Portal Info Panel */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               👤 Volunteer Identity Portal
-            </h4>
+            </h2>
             <div className="space-y-2.5 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] text-slate-500 uppercase font-mono">Volunteer Active</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono">Volunteer Active</span>
                 <button
                   id="signout-button"
                   onClick={handleLogout}
@@ -1037,10 +1037,10 @@ export default function App() {
                 </button>
               </div>
               <div className="bg-slate-950/80 border border-slate-900 rounded-lg p-3 space-y-2">
-                <span className="text-[9px] text-slate-500 uppercase font-mono block font-bold">Welcome Banner</span>
+                <span className="text-[9px] text-slate-400 uppercase font-mono block font-bold">Welcome Banner</span>
                 <p className="text-white text-[11px] font-semibold break-all">Welcome, {user.email}</p>
                 <div className="border-t border-slate-900 pt-2 flex items-center justify-between text-[10px]">
-                  <span className="text-[9px] text-slate-500 uppercase font-mono">UUID</span>
+                  <span className="text-[9px] text-slate-400 uppercase font-mono">UUID</span>
                   <span className="text-[9px] font-mono text-indigo-400">{user.uid.substring(0, 10)}...</span>
                 </div>
               </div>
@@ -1055,7 +1055,7 @@ export default function App() {
             <div className="grid grid-cols-3 gap-2 text-center" role="status" aria-live="polite">
               <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
                 <span className="text-[16px]" title="Fans Assisted">👥</span>
-                <span className="text-[10px] text-slate-500 uppercase font-mono mt-1">Assisted</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Assisted</span>
                 <span className="text-md font-black text-indigo-400 font-mono tracking-tight mt-0.5">
                   {fansAssisted}
                 </span>
@@ -1063,7 +1063,7 @@ export default function App() {
               
               <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
                 <span className="text-[16px]" title="Alerts Resolved">🚨</span>
-                <span className="text-[10px] text-slate-500 uppercase font-mono mt-1">Resolved</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Resolved</span>
                 <span className="text-md font-black text-emerald-400 font-mono tracking-tight mt-0.5">
                   {alertsResolved}
                 </span>
@@ -1071,7 +1071,7 @@ export default function App() {
               
               <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
                 <span className="text-[16px]" title="Distance Covered">📍</span>
-                <span className="text-[10px] text-slate-500 uppercase font-mono mt-1">Distance</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Distance</span>
                 <span className="text-[11px] font-black text-cyan-400 font-mono tracking-tight mt-1">
                   {distanceCovered.toFixed(2)} <span className="text-[8px] text-slate-500">km</span>
                 </span>
@@ -1097,7 +1097,7 @@ export default function App() {
               id="inject-sandbox-button"
               onClick={loadSampleTelemetry}
               className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-medium text-white shadow-lg shadow-indigo-950/50"
-              aria-label="Inject mock FIFA operations metrics scenario dataset"
+              aria-label="Inject Scenario Dataset"
             >
               Inject Scenario Dataset
             </button>
@@ -1272,7 +1272,7 @@ export default function App() {
                 id="connect-wallet-sidebar-button"
                 onClick={handleConnectWallet}
                 className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-indigo-950/50 cursor-pointer"
-                aria-label="Connect MetaMask wallet to register volunteer profile"
+                aria-label="Connect Wallet"
               >
                 Connect Wallet
               </button>
@@ -1284,7 +1284,7 @@ export default function App() {
             id="connect-infra-button"
             onClick={() => setIsInfraModalOpen(true)}
             className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold shadow-lg hover:shadow-indigo-950/20 cursor-pointer flex items-center justify-center gap-1.5 shrink-0 mt-1"
-            aria-label="Connect live physical stadium IoT infrastructure"
+            aria-label="Connect Infrastructure"
           >
             🔌 Connect Infrastructure
           </button>
@@ -1969,6 +1969,6 @@ export default function App() {
           <button id="close-toast-button" onClick={() => setToastMessage(null)} className="text-emerald-500 hover:text-white ml-2 text-sm font-bold" aria-label="Close notification toast">×</button>
         </div>
       )}
-    </div>
+    </main>
   );
 }

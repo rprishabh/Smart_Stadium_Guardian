@@ -201,7 +201,6 @@ export const DataIngestion: React.FC<DataIngestionProps> = ({ onDataParsed }) =>
           accept=".csv"
           onChange={(e) => e.target.files && handleFile(e.target.files[0])}
           className="sr-only"
-          aria-hidden="true"
         />
 
         <div className="flex flex-col items-center justify-center gap-2">
@@ -211,7 +210,7 @@ export const DataIngestion: React.FC<DataIngestionProps> = ({ onDataParsed }) =>
           <p className="text-xs font-medium text-slate-300">
             {fileName ? `Selected: ${fileName}` : "Drag and drop your CSV here"}
           </p>
-          <p className="text-[10px] text-slate-500">or click to browse local files</p>
+          <p className="text-[10px] text-slate-400">or click to browse local files</p>
         </div>
       </div>
 
