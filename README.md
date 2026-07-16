@@ -1,41 +1,44 @@
-# 🏟️ Smart Stadium Guardians - FIFA 2026 Operations Console
+# 🛡️ Stadium Guardian - FIFA World Cup Ops Centre
 
-A multi-user, AI-powered real-time command center for mega-event volunteer operations. Built for hackathon evaluation, this dashboard simulates live stadium telemetry, integrates AI-driven foreign language translation for crowd support, and permanently logs operational tasks to the Polygon blockchain via Google Firebase.
+An AI-powered, Web3-enabled smart event operations dashboard designed to coordinate frontline volunteers, automate multi-sector crowd control dynamics, and protect stadium integrity for mega-scale global sporting events like the FIFA World Cup 2026.
 
-## High-Level Architecture
-This application utilizes a modern serverless stack to manage real-time crowds:
-*   **Frontend Interface:** React + Tailwind CSS + Web Speech API (Microphone) & Geolocation API.
-*   **Google Services:** Firebase Authentication (User Login) & Firestore (Cryptographic Audit Logging).
-*   **AI Engine:** Google Gemini API (Multilingual Fan Intent Translation & Tactical Stadium Routing).
-*   **Web3 Ledger:** Polygon Amoy Testnet (Soulbound ERC-1155 NFT Generation for Volunteer Action Verification).
+Live Application Link: https://smart-stadium-guardians.web.app/
 
 ---
 
-## 🔑 Hackathon Evaluation Credentials
-To bypass standard user registration and access the full dashboard footprint, please use our pre-configured judge credentials:
-
-> **Email:** `volunteer1@stadium.com`
-> **Password:** `password123`
-> *(Alternatively, use the "Bypass / Explore as Guest Judge" button on the login screen for 1-click access).*
+## 🏆 Chosen Vertical & Problem Statement
+* **Vertical:** Smart Infrastructure / Event Operations & Crowd Management
+* **The Problem:** Mega-events suffer from massive logistical friction—chaotic bottlenecks, disconnected communication networks, high turnstile stress, language barriers among international fans, and zero transparency for post-match security audits. 
+* **The Solution:** Stadium Guardian serves as a centralized "brain" that acts as a real-time command station. It integrates live infrastructure telemetry with predictive AI orchestration and blockchain incentives to keep stadium staff dynamic, unified, and efficient.
 
 ---
 
-## Step-by-Step Testing Guide
+## 🧠 Core Engineering Architecture & Logic
 
-We have built a "Guided Sandbox" so you can easily test the dynamic features without waiting for an automated timer. 
+### 1. Ingestion & Telemetry Pipeline
+* **Real-World Vision:** Built to connect seamlessly to physical stadium infrastructure including raw RTSP streams from IoT CCTV camera vision grids, ticketing API endpoints for gate turnstiles, and GeoJSON facility digital twins.
+* **Sandbox Validation:** Features a native `Inject Scenario Dataset` controller and a manual CSV file parse pipeline allowing evaluators to simulate rapid capacity surges and gate incidents across major stadium zones (Gates A through D).
 
-**1. Test the Match Timeline States**
-*   Use the 4 buttons at the top (`Pre-Match`, `Live Play`, `Half-Time`, `Post-Match`).
-*   Observe how the 6 Multi-Sector portals instantly change alert statuses and the scoreboard syncs to the match clock.
+### 2. Google Gemini 3.5 Flash Orchestration
+* **AI Operational Adviser:** The system scans live sector data matrices continuously. When capacity crosses critical thresholds ($>80\%$), Gemini 3.5 Flash computes real-time crowd diversion scripts and pushes actionable, clear instructions directly to operators.
+* **Multilingual Translation Matrix:** Integrates the Web Speech API with Gemini's high-performance linguistic capabilities. Volunteers capture fan audio queries spoken in diverse languages (e.g., Hindi, Spanish, Arabic), which Gemini instantly translates into English while returning structured routing and safety procedures.
 
-**2. Test the Live AI Translation Matrix**
-*   Select a language from the dropdown (e.g., `Hindi`).
-*   Click **"Listen to Fan"** (Accept microphone permissions).
-*   Speak a phrase like "Where is my seat?" or "Washroom kidhar hai". 
-*   Observe Gemini translating the phrase to English and providing a contextual routing instruction based on the active Match Timeline.
+### 3. Web3 Integrity & Accountability
+* **Polygon Amoy Audit Trail:** To prevent log tampering during high-stakes security threats, all critical capacity updates and active incidents are committed directly to the Polygon Amoy Testnet via Web3 smart contracts.
+* **Soulbound ERC-1155 Rewards:** Volunteers connect their decentralized MetaMask identity to unlock untransferable Soulbound tokens (SBTs) that track their operational achievements, transforming volunteer management into a transparent, gamified pipeline.
 
-**3. Test the Cryptographic Volunteer Deployment**
-*   Identify a sector showing a Red "ALERT" status.
-*   Click **"Deploy Volunteer to Resolve"**.
-*   Accept the MetaMask transaction prompt (requires Polygon Amoy Testnet).
-*   Observe the live Geolocation capture, the Firebase Firestore sync, and the new verifiable transaction hash populating the Live Shift Timeline on the right.
+---
+
+## 🛠️ How to Run & Verify Functionality
+
+1. **Onboard Infrastructure:** Click the `Connect Infrastructure` dashboard element to view the enterprise turnstile hooks and Vision AI setup.
+2. **Inject Test State:** Go to the `Quick Sandbox` panel and click `Inject Scenario Dataset` to populate the dynamic operations console with active alerts.
+3. **Trigger AI Reasoning:** Scroll down to the `AI Operational Adviser` block to inspect the customized tactical recommendations compiled by the Gemini engine.
+4. **Test Translation Matrix:** Enter an international text query manually in the translation matrix console to review structured JSON data parsing.
+5. **Audit On-Chain State:** Link your MetaMask wallet to view your active Soulbound token tiers and click out to verify the live block explorer transaction records.
+
+---
+
+## 📝 Architectural Assumptions
+* Automated CCTV metrics assume pre-processed bounding box data provided by a dedicated edge deployment running YOLOv8 crowd density frameworks.
+* Blockchain states assume minor transaction gas parameters are subsidized via standard platform developer relayer infrastructure to keep entry barriers low for non-technical volunteers.
