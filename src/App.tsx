@@ -1375,7 +1375,7 @@ export default function App() {
               <div className={`flex-grow flex flex-col gap-6 ${activeTab === "dashboard" ? "flex" : "hidden lg:flex"}`}>
                 {telemetry === null ? (
                   /* Initial Uninitialized Screen */
-                  <div className="flex-grow flex flex-col items-center justify-center border border-slate-900 bg-slate-950/40 rounded-2xl p-12 text-center select-text">
+                  <div className="flex-grow flex flex-col items-center justify-start pt-24 border border-slate-900 bg-slate-950/40 rounded-2xl p-12 text-center select-text">
                     <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-300 mb-4 animate-pulse">
                       <svg width="32" height="32" className="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
