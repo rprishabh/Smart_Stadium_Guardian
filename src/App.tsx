@@ -1019,7 +1019,7 @@ export default function App() {
       {/* ═══ MAIN LAYOUT ═══ */}
       <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
         {/* ── Sidebar Control Panel (Left Pane) ── */}
-        <aside className="w-full lg:w-80 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
+        <aside className="w-full lg:w-80 order-2 lg:order-1 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
           {/* Brand Header */}
           <div className="flex items-center gap-3 pb-4 border-b border-slate-900">
             <div className="p-2 bg-indigo-950/50 border border-indigo-500/30 rounded-lg text-indigo-400 shrink-0">
@@ -1308,7 +1308,7 @@ export default function App() {
         </aside>
 
         {/* ── Main Workspace (Right Pane) ── */}
-        <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
+        <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20 order-1 lg:order-2">
 
           {/* Top Operations Header */}
           <header className="border-b border-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950/60 backdrop-blur shrink-0">
