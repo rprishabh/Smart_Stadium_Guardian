@@ -6,7 +6,7 @@ import { evaluateStadiumMetrics } from "./utils/geminiEngine";
 import { logIncidentToLedger } from "./utils/ledger";
 import { TelemetryPoint } from "./types/telemetry";
 import ZoneCard from "./components/ZoneCard";
-import { logDeploymentEvent, auth } from "./utils/firebaseConfig";
+import { auth } from "./utils/firebaseConfig";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import {
   VOLUNTEER_RANKS,
@@ -310,6 +310,7 @@ export default function App() {
 
         let dbLogId: string | null = null;
         try {
+          const { logDeploymentEvent } = await import("./utils/firestoreService");
           dbLogId = await logDeploymentEvent(volunteerId, targetLevel, hash, taskText, coordinates);
         } catch (dbErr) {
           console.error("Firebase multi-user database write error: ", dbErr);
