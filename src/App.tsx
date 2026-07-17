@@ -6,7 +6,7 @@ import { evaluateStadiumMetrics } from "./utils/geminiEngine";
 import { logIncidentToLedger } from "./utils/ledger";
 import { TelemetryPoint } from "./types/telemetry";
 import ZoneCard from "./components/ZoneCard";
-import { auth } from "./utils/firebaseConfig";
+import { getAuthInstance } from "./utils/firebaseConfig";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import {
   VOLUNTEER_RANKS,
@@ -173,7 +173,7 @@ export default function App() {
   }, [toastMessage]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(getAuthInstance(), (firebaseUser) => {
       setUser(firebaseUser);
       setIsAuthLoading(false);
     });
@@ -250,7 +250,7 @@ export default function App() {
       return;
     }
     try {
-      await signInWithEmailAndPassword(auth, emailInput, passwordInput);
+      await signInWithEmailAndPassword(getAuthInstance(), emailInput, passwordInput);
       setEmailInput("");
       setPasswordInput("");
     } catch (err: any) {
@@ -262,7 +262,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await signOut(getAuthInstance());
     } catch (err: any) {
       console.error("Firebase Signout error:", err);
       setToastMessage("Network error: Logout failed. Please try again.");
@@ -271,7 +271,7 @@ export default function App() {
 
   const handleGuestBypass = async () => {
     try {
-      await signInWithEmailAndPassword(auth, "volunteer1@stadium.com", "password123");
+      await signInWithEmailAndPassword(getAuthInstance(), "volunteer1@stadium.com", "password123");
     } catch (err: any) {
       console.error("Guest bypass login error:", err);
       setToastMessage("Bypass login failed: Network error. Please try again.");

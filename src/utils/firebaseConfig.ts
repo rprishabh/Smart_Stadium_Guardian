@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, Auth } from "firebase/auth";
 
 // Your secure environment configuration for Create React App
 const firebaseConfig = {
@@ -15,5 +15,12 @@ const firebaseConfig = {
 // Initialize and export Firebase Core Engine
 export const app = initializeApp(firebaseConfig);
 
-// Initialize and export Firebase Auth Instance
-export const auth = getAuth(app);
+let authInstance: Auth | null = null;
+
+// Initialize and export Firebase Auth Instance lazily on demand
+export const getAuthInstance = (): Auth => {
+    if (!authInstance) {
+        authInstance = getAuth(app);
+    }
+    return authInstance;
+};
