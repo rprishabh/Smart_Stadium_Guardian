@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from "react";
-
+import { DataIngestion } from "./components/DataIngestion";
 import type { SecurityIncidentLog } from "./components/SecurityLog";
 
 import { evaluateStadiumMetrics } from "./utils/geminiEngine";
@@ -18,7 +18,7 @@ import {
 const SecurityLog = lazy(() => import("./components/SecurityLog").then(module => ({ default: module.SecurityLog })));
 const CCTVGrid = lazy(() => import("./components/CCTVGrid"));
 const ZoneDetailModal = lazy(() => import("./components/ZoneDetailModal"));
-const DataIngestion = lazy(() => import("./components/DataIngestion").then(module => ({ default: module.DataIngestion })));
+
 
 // ── Constants ──────────────────────────────────────
 const LANGUAGES = [
@@ -1097,9 +1097,7 @@ export default function App() {
           </div>
 
           {/* Data Ingestion Pipeline */}
-          <Suspense fallback={<div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-400 text-xs text-center animate-pulse">Loading CSV Ingestor...</div>}>
-            <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
-          </Suspense>
+          <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
 
           {/* Quick Sandbox Tester */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
