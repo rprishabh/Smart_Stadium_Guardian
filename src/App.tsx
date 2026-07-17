@@ -995,16 +995,22 @@ export default function App() {
           <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold hidden sm:inline">
             🏟️ FIFA World Cup 2026
           </span>
-          <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
-            <span className="text-white font-bold">USA <span className="inline-block min-w-[24px] text-center">🇺🇸</span></span>
-            <span className="text-lg font-black font-mono text-white">
-              {scoreboard.home}
-            </span>
-            <span className="text-slate-300 font-mono">—</span>
-            <span className="text-lg font-black font-mono text-white">
-              {scoreboard.away}
-            </span>
-            <span className="text-white font-bold"><span className="inline-block min-w-[24px] text-center">🇧🇷</span> Brazil</span>
+          <div className="flex items-center bg-slate-900/60 rounded-lg border border-slate-800 w-[280px] sm:w-[320px] shrink-0 overflow-hidden">
+            <div className="flex-1 text-right py-1 px-2 whitespace-nowrap">
+               <span className="text-white font-bold">USA <span className="inline-block min-w-[20px] text-center">🇺🇸</span></span>
+            </div>
+            <div className="shrink-0 w-[80px] text-center py-1 bg-slate-950/50 flex items-center justify-center gap-2 border-x border-slate-800/50">
+              <span className="text-lg font-black font-mono text-white">
+                {scoreboard.home}
+              </span>
+              <span className="text-slate-300 font-mono">—</span>
+              <span className="text-lg font-black font-mono text-white">
+                {scoreboard.away}
+              </span>
+            </div>
+            <div className="flex-1 text-left py-1 px-2 whitespace-nowrap">
+               <span className="text-white font-bold"><span className="inline-block min-w-[20px] text-center">🇧🇷</span> Brazil</span>
+            </div>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
