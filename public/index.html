@@ -4,8 +4,7 @@
 <head>
   <meta charset="utf-8" />
 
-  <link rel="preconnect" href="https://apis.google.com">
-  <link rel="preconnect" href="https://stadium-guardian.firebaseapp.com">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
 
   <!-- Asynchronous Google Fonts Loading -->
@@ -47,7 +46,22 @@
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Inline static App Shell skeleton for instant paint (LCP/FCP) -->
+    <div style="min-height: 100vh; background-color: #020617; padding: 24px; display: flex; flex-direction: column; gap: 24px; font-family: sans-serif;">
+      <!-- Header Ticker skeleton -->
+      <div style="height: 40px; border-radius: 8px; background-color: #0f172a; width: 100%; border: 1px solid #1e293b;"></div>
+      <!-- Workspace split skeleton -->
+      <div style="display: flex; gap: 24px; flex: 1;">
+         <!-- Sidebar skeleton -->
+         <div style="width: 320px; border-radius: 8px; background-color: #0f172a; border: 1px solid #1e293b; height: 500px;"></div>
+         <!-- Main Content skeleton -->
+         <div style="flex: 1; border-radius: 8px; background-color: #0f172a; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: center; color: #475569; font-size: 14px;">
+           Loading Ops Console...
+         </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

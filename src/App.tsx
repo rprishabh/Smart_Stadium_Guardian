@@ -158,6 +158,7 @@ export default function App() {
   const [englishTranslation, setEnglishTranslation] = useState<string>("");
   const [tacticalInstruction, setTacticalInstruction] = useState<string>("");
   const [user, setUser] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(process.env.NODE_ENV === "test" ? false : true);
   const [emailInput, setEmailInput] = useState<string>("");
   const [passwordInput, setPasswordInput] = useState<string>("");
@@ -785,13 +786,7 @@ export default function App() {
   // Current crowd pattern label
   const currentPattern = CROWD_PATTERNS[patternIndex % CROWD_PATTERNS.length];
 
-  if (isAuthLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-white bg-slate-950 font-mono text-sm tracking-wider animate-pulse">
-        Loading Secure Console...
-      </div>
-    );
-  }
+
 
   if (!user) {
     return (
