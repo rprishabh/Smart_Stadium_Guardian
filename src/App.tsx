@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from "react";
-import { DataIngestion } from "./components/DataIngestion";
+
 import type { SecurityIncidentLog } from "./components/SecurityLog";
 
 import { evaluateStadiumMetrics } from "./utils/geminiEngine";
-import { logIncidentToLedger } from "./utils/ledger";
+
 import { TelemetryPoint } from "./types/telemetry";
 import ZoneCard from "./components/ZoneCard";
 import { getAuthInstance } from "./utils/firebaseConfig";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+
 import {
   VOLUNTEER_RANKS,
   DEFAULT_BADGE_DETAILS,
@@ -18,6 +18,7 @@ import {
 const SecurityLog = lazy(() => import("./components/SecurityLog").then(module => ({ default: module.SecurityLog })));
 const CCTVGrid = lazy(() => import("./components/CCTVGrid"));
 const ZoneDetailModal = lazy(() => import("./components/ZoneDetailModal"));
+const DataIngestion = lazy(() => import("./components/DataIngestion").then(module => ({ default: module.DataIngestion })));
 
 // ── Constants ──────────────────────────────────────
 const LANGUAGES = [
@@ -173,11 +174,16 @@ export default function App() {
   }, [toastMessage]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuthInstance(), (firebaseUser) => {
-      setUser(firebaseUser);
-      setIsAuthLoading(false);
+    let unsubscribe: (() => void) | null = null;
+    import("firebase/auth").then(({ onAuthStateChanged }) => {
+      unsubscribe = onAuthStateChanged(getAuthInstance(), (firebaseUser) => {
+        setUser(firebaseUser);
+        setIsAuthLoading(false);
+      });
     });
-    return () => unsubscribe();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
   const [gpsCoordinates, setGpsCoordinates] = useState<{ latitude: number | string; longitude: number | string } | null>(null);
   const [micPermissionBlocked, setMicPermissionBlocked] = useState<boolean>(false);
@@ -250,6 +256,7 @@ export default function App() {
       return;
     }
     try {
+      const { signInWithEmailAndPassword } = await import("firebase/auth");
       await signInWithEmailAndPassword(getAuthInstance(), emailInput, passwordInput);
       setEmailInput("");
       setPasswordInput("");
@@ -262,6 +269,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
+      const { signOut } = await import("firebase/auth");
       await signOut(getAuthInstance());
     } catch (err: any) {
       console.error("Firebase Signout error:", err);
@@ -271,6 +279,7 @@ export default function App() {
 
   const handleGuestBypass = async () => {
     try {
+      const { signInWithEmailAndPassword } = await import("firebase/auth");
       await signInWithEmailAndPassword(getAuthInstance(), "volunteer1@stadium.com", "password123");
     } catch (err: any) {
       console.error("Guest bypass login error:", err);
@@ -725,6 +734,7 @@ export default function App() {
           (point) => point.gateCapacityPercentage > 80 || point.activeIncidentsCount > 0
         );
 
+        const { logIncidentToLedger } = await import("./utils/ledger");
         const ledgerReceipts: SecurityIncidentLog[] = [];
         for (const zone of criticalZones) {
           let alertMessage = "";
@@ -1087,7 +1097,9 @@ export default function App() {
           </div>
 
           {/* Data Ingestion Pipeline */}
-          <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
+          <Suspense fallback={<div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-400 text-xs text-center animate-pulse">Loading CSV Ingestor...</div>}>
+            <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
+          </Suspense>
 
           {/* Quick Sandbox Tester */}
           <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
