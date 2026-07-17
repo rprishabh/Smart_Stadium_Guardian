@@ -1007,9 +1007,9 @@ export default function App() {
       </div>
 
       {/* ═══ MAIN LAYOUT ═══ */}
-      <div className="flex-grow flex flex-col md:flex-row overflow-hidden">
+      <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
         {/* ── Sidebar Control Panel (Left Pane) ── */}
-        <aside className="w-full md:w-80 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
+        <aside className="w-full lg:w-80 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
           {/* Brand Header */}
           <div className="flex items-center gap-3 pb-4 border-b border-slate-900">
             <div className="p-2 bg-indigo-950/50 border border-indigo-500/30 rounded-lg text-indigo-400 shrink-0">
@@ -1461,7 +1461,7 @@ export default function App() {
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {getSectorData(matchPhase).map((item) => (
                           <div
                             key={item.name}
