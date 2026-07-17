@@ -43,6 +43,7 @@ function nudgeToward(current: number, target: number, jitter: number): number {
 }
 
 // ── Match ticker mock data ──
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MATCH_TEAMS = { home: "USA 🇺🇸", away: "🇧🇷 Brazil" };
 
 function getBadgeIpfsUrl(level: number, title: string): string {
@@ -987,14 +988,15 @@ export default function App() {
 
       {/* ═══ LIVE MATCH SCORE TICKER ═══ */}
       <div
-        className="w-full px-4 py-2 bg-gradient-to-r from-indigo-950/80 via-slate-950 to-indigo-950/80 border-b border-indigo-900/30 flex items-center justify-center gap-6 text-xs shrink-0"
+        className="w-full h-[54px] px-4 bg-gradient-to-r from-indigo-950/80 via-slate-950 to-indigo-950/80 border-b border-indigo-900/30 flex items-center justify-center gap-6 text-xs shrink-0"
+        style={{ contain: 'layout size' }}
       >
         <div className="flex items-center gap-3">
           <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold hidden sm:inline">
             🏟️ FIFA World Cup 2026
           </span>
           <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
-            <span className="text-white font-bold">{MATCH_TEAMS.home}</span>
+            <span className="text-white font-bold">USA <span className="inline-block min-w-[24px] text-center">🇺🇸</span></span>
             <span className="text-lg font-black font-mono text-white">
               {scoreboard.home}
             </span>
@@ -1002,7 +1004,7 @@ export default function App() {
             <span className="text-lg font-black font-mono text-white">
               {scoreboard.away}
             </span>
-            <span className="text-white font-bold">{MATCH_TEAMS.away}</span>
+            <span className="text-white font-bold"><span className="inline-block min-w-[24px] text-center">🇧🇷</span> Brazil</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -1012,298 +1014,9 @@ export default function App() {
       </div>
 
       {/* ═══ MAIN LAYOUT ═══ */}
-      <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
-        {/* ── Sidebar Control Panel (Left Pane) ── */}
-        <aside className="w-full lg:w-80 order-2 lg:order-1 border-r border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
-          {/* Brand Header */}
-          <div className="flex items-center gap-3 pb-4 border-b border-slate-900">
-            <div className="p-2 bg-indigo-950/50 border border-indigo-500/30 rounded-lg text-indigo-400 shrink-0">
-              <svg width="32" height="32" className="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-md font-bold tracking-tight text-white">
-                STADIUM GUARDIAN
-              </h1>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
-                Operations Center
-              </p>
-            </div>
-          </div>
-          {/* Volunteer Identity Portal Info Panel */}
-          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              👤 Volunteer Identity Portal
-            </h2>
-            <div className="space-y-2.5 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] text-slate-400 uppercase font-mono">Volunteer Active</span>
-                <button
-                  id="signout-button"
-                  onClick={handleLogout}
-                  className="text-[10px] text-red-400 hover:text-red-305 underline cursor-pointer hover:font-semibold"
-                  aria-label="Sign out volunteer identity session"
-                >
-                  Sign Out
-                </button>
-              </div>
-              <div className="bg-slate-950/80 border border-slate-900 rounded-lg p-3 space-y-2">
-                <span className="text-[9px] text-slate-400 uppercase font-mono block font-bold">Welcome Banner</span>
-                <p className="text-white text-[11px] font-semibold break-all">Welcome, {user.email}</p>
-                <div className="border-t border-slate-900 pt-2 flex items-center justify-between text-[10px]">
-                  <span className="text-[9px] text-slate-400 uppercase font-mono">UUID</span>
-                  <span className="text-[9px] font-mono text-indigo-400">{user.uid.substring(0, 10)}...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Live Shift Metrics Card */}
-          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              📊 Live Shift Metrics
-            </h2>
-            <div className="grid grid-cols-3 gap-2 text-center" role="status" aria-live="polite">
-              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
-                <span className="text-[16px]" title="Fans Assisted">👥</span>
-                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Assisted</span>
-                <span className="text-md font-black text-indigo-400 font-mono tracking-tight mt-0.5">
-                  {fansAssisted}
-                </span>
-              </div>
-              
-              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
-                <span className="text-[16px]" title="Alerts Resolved">🚨</span>
-                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Resolved</span>
-                <span className="text-md font-black text-emerald-400 font-mono tracking-tight mt-0.5">
-                  {alertsResolved}
-                </span>
-              </div>
-              
-              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
-                <span className="text-[16px]" title="Distance Covered">📍</span>
-                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Distance</span>
-                <span className="text-[11px] font-black text-cyan-400 font-mono tracking-tight mt-1">
-                  {distanceCovered.toFixed(2)} <span className="text-[8px] text-slate-300">km</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Data Ingestion Pipeline */}
-          <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
-
-          {/* Quick Sandbox Tester */}
-          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
-              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
-              Quick Sandbox
-            </h2>
-            <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
-              Load mock research metrics to test operational AI reasoning immediately.
-            </p>
-            <button
-              id="inject-sandbox-button"
-              onClick={loadSampleTelemetry}
-              className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-medium text-white shadow-lg shadow-indigo-950/50"
-              aria-label="Inject Scenario Dataset"
-            >
-              Inject Scenario Dataset
-            </button>
-          </div>
-
-          {/* Translation Settings */}
-          <div className="bg-slate-900/40 border border-slate-900 rounded-xl p-5">
-            <label htmlFor="language-select" className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
-              Translation Matrix
-            </label>
-            <select
-              id="language-select"
-              value={targetLanguage}
-              onChange={handleLanguageChange}
-              className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none transition cursor-pointer mb-3"
-              aria-label="Select target translation language"
-            >
-              {LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value}>
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-            <button
-              id="listen-fan-button"
-              onClick={handleListenToFan}
-              disabled={isListening}
-              className={`w-full py-1.5 border transition rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
-                isListening
-                  ? "bg-red-950/40 border-red-800/40 text-red-400 animate-pulse"
-                  : "bg-indigo-950 hover:bg-indigo-900 border-indigo-850 text-indigo-400 hover:text-indigo-300"
-              }`}
-              aria-label="Listen to fan audio query speech in real time"
-            >
-              {isListening ? "🎙️ Listening..." : "🎤 Listen to Fan"}
-            </button>
-
-            {micPermissionBlocked && (
-              <p className="text-red-500 text-[11px] mt-2 font-medium">
-                🎤 Microphone access blocked. Please allow browser permissions to test live AI translation.
-              </p>
-            )}
-
-            {/* Manual Query Input Fallback */}
-            <div className="mt-3 pt-3 border-t border-slate-900/60">
-              <label htmlFor="manual-query-input" className="text-[10px] text-slate-300 font-bold uppercase tracking-wider block mb-2">
-                Or Type Fan Query Manually
-              </label>
-              <form onSubmit={handleManualQuerySubmit} className="flex gap-2">
-                <input
-                  id="manual-query-input"
-                  type="text"
-                  placeholder="e.g. Washroom kaha par hai"
-                  maxLength={200}
-                  value={manualQueryText}
-                  onChange={(e) => setManualQueryText(e.target.value)}
-                  className="flex-grow bg-slate-950 border border-slate-800 text-slate-100 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
-                  aria-label="Type fan speech query manually"
-                />
-                <button
-                  id="manual-translate-button"
-                  type="submit"
-                  disabled={isAiLoading}
-                  className="px-3 bg-indigo-950 hover:bg-indigo-900 border border-indigo-850 text-indigo-400 hover:text-indigo-300 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition"
-                  aria-label="Translate manual query"
-                >
-                  Translate
-                </button>
-              </form>
-            </div>
-
-            {capturedSTT && (
-              <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs" role="status" aria-live="polite">
-                <div>
-                  <span className="text-[10px] text-slate-300 uppercase font-mono block">Captured STT</span>
-                  <p className="text-slate-350 font-medium italic">"{capturedSTT}"</p>
-                </div>
-                <div className="border-t border-slate-900 pt-2 space-y-1.5">
-                  <div>
-                    <span className="text-[10px] text-slate-300 uppercase font-mono block">Detected Script/Language</span>
-                    <span className="text-emerald-455 font-semibold">{detectedLanguage}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-indigo-400 uppercase font-mono block">English Translation</span>
-                    <p className="text-slate-200 leading-normal font-semibold">"{englishTranslation}"</p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-indigo-455 uppercase font-mono block">AI Tactical Instruction</span>
-                    <p className="text-slate-200 leading-relaxed font-sans">{tacticalInstruction}</p>
-                  </div>
-                </div>
-                <button
-                  id="clear-translation-log-button"
-                  onClick={() => {
-                    setCapturedSTT("");
-                    setDetectedLanguage("");
-                    setEnglishTranslation("");
-                    setTacticalInstruction("");
-                  }}
-                  className="text-[10px] text-slate-300 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
-                  aria-label="Clear captured translation log"
-                >
-                  Clear Log
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Web3 Volunteer Rewards Control Panel */}
-          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <svg width="16" height="16" className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v3m12-3V9a2 2 0 00-2-2h-3m-3 4H9M9 3h3" />
-              </svg>
-              Volunteer Rewards
-            </h2>
-            
-            {/* Styled Badge Visual Wrapper */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-indigo-950/60 to-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-lg min-h-[140px] group">
-              <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 via-transparent to-transparent opacity-60 pointer-events-none" />
-              
-              {/* Badge Icon / Level Graphic */}
-              <div className="w-14 h-14 rounded-full bg-slate-900 border-2 border-indigo-500/40 flex items-center justify-center text-indigo-400 shadow-md shadow-indigo-950/50 mb-2 relative transition-transform duration-300 group-hover:scale-105">
-                <span className="text-xs font-black tracking-widest font-mono">
-                  LVL {currentNftLevel}
-                </span>
-              </div>
-              
-              <span className="text-[10px] text-indigo-300 uppercase tracking-widest font-bold">
-                Soulbound ERC-1155 NFT
-              </span>
-              <p className="text-xs text-white font-bold mt-1">
-                {VOLUNTEER_RANKS[currentNftLevel - 1] || "Novice Steward"}
-              </p>
-              {currentNftLevel < 10 ? (
-                <span className="text-[9px] text-slate-300 mt-0.5">
-                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> / {currentNftLevel * 2} for Lvl {currentNftLevel + 1}
-                </span>
-              ) : (
-                <span className="text-[9px] text-slate-300 mt-0.5">
-                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> (Max Level Reached)
-                </span>
-              )}
-            </div>
-
-            <p className="text-[10px] text-slate-400 leading-relaxed text-center font-medium">
-              Current Rank: <span className="text-slate-200">Level {currentNftLevel} - {VOLUNTEER_RANKS[currentNftLevel - 1]}</span>
-            </p>
-
-            {walletAddress ? (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs bg-slate-950/60 p-2 rounded-lg border border-slate-900">
-                  <span className="text-[10px] text-slate-300 font-mono">Address</span>
-                  <span className="text-emerald-400 font-mono font-semibold" title={walletAddress}>
-                    {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
-                  </span>
-                </div>
-                {currentNftLevel < 10 && tasksCompleted >= currentNftLevel * 2 && (
-                  <button
-                    id="claim-badge-button"
-                    onClick={() => triggerLevelUp(currentNftLevel + 1, walletAddress)}
-                    disabled={isMinting}
-                    className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
-                    aria-label={`Claim Level ${currentNftLevel + 1} Soulbound NFT Badge on Polygon`}
-                  >
-                    {isMinting ? "Minting..." : `🏆 Claim Rank ${currentNftLevel + 1} NFT`}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <button
-                id="connect-wallet-sidebar-button"
-                onClick={handleConnectWallet}
-                className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-indigo-950/50 cursor-pointer"
-                aria-label="Connect Wallet"
-              >
-                Connect Wallet
-              </button>
-            )}
-          </div>
-
-          {/* Infrastructure Integration Hub Button */}
-          <button
-            id="connect-infra-button"
-            onClick={() => setIsInfraModalOpen(true)}
-            className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold shadow-lg hover:shadow-indigo-950/20 cursor-pointer flex items-center justify-center gap-1.5 shrink-0 mt-1"
-            aria-label="Connect Infrastructure"
-          >
-            🔌 Connect Infrastructure
-          </button>
-        </aside>
-
+      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden">
         {/* ── Main Workspace (Right Pane) ── */}
-        <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20 order-1 lg:order-2">
+        <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
 
           {/* Top Operations Header */}
           <header className="border-b border-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950/60 backdrop-blur shrink-0">
@@ -1693,6 +1406,295 @@ export default function App() {
 
           </div>
         </main>
+
+        {/* ── Sidebar Control Panel (Left Pane) ── */}
+        <aside className="w-full border-l border-slate-900 bg-slate-950 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar" aria-label="Operations Dashboard Controls">
+          {/* Brand Header */}
+          <div className="flex items-center gap-3 pb-4 border-b border-slate-900">
+            <div className="p-2 bg-indigo-950/50 border border-indigo-500/30 rounded-lg text-indigo-400 shrink-0">
+              <svg width="32" height="32" className="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-md font-bold tracking-tight text-white">
+                STADIUM GUARDIAN
+              </h1>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
+                Operations Center
+              </p>
+            </div>
+          </div>
+          {/* Volunteer Identity Portal Info Panel */}
+          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              👤 Volunteer Identity Portal
+            </h2>
+            <div className="space-y-2.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-slate-400 uppercase font-mono">Volunteer Active</span>
+                <button
+                  id="signout-button"
+                  onClick={handleLogout}
+                  className="text-[10px] text-red-400 hover:text-red-305 underline cursor-pointer hover:font-semibold"
+                  aria-label="Sign out volunteer identity session"
+                >
+                  Sign Out
+                </button>
+              </div>
+              <div className="bg-slate-950/80 border border-slate-900 rounded-lg p-3 space-y-2">
+                <span className="text-[9px] text-slate-400 uppercase font-mono block font-bold">Welcome Banner</span>
+                <p className="text-white text-[11px] font-semibold break-all">Welcome, {user.email}</p>
+                <div className="border-t border-slate-900 pt-2 flex items-center justify-between text-[10px]">
+                  <span className="text-[9px] text-slate-400 uppercase font-mono">UUID</span>
+                  <span className="text-[9px] font-mono text-indigo-400">{user.uid.substring(0, 10)}...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Live Shift Metrics Card */}
+          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              📊 Live Shift Metrics
+            </h2>
+            <div className="grid grid-cols-3 gap-2 text-center" role="status" aria-live="polite">
+              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
+                <span className="text-[16px]" title="Fans Assisted">👥</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Assisted</span>
+                <span className="text-md font-black text-indigo-400 font-mono tracking-tight mt-0.5">
+                  {fansAssisted}
+                </span>
+              </div>
+              
+              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
+                <span className="text-[16px]" title="Alerts Resolved">🚨</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Resolved</span>
+                <span className="text-md font-black text-emerald-400 font-mono tracking-tight mt-0.5">
+                  {alertsResolved}
+                </span>
+              </div>
+              
+              <div className="bg-slate-950/60 border border-slate-900 rounded-lg p-2 flex flex-col items-center justify-center">
+                <span className="text-[16px]" title="Distance Covered">📍</span>
+                <span className="text-[10px] text-slate-400 uppercase font-mono mt-1">Distance</span>
+                <span className="text-[11px] font-black text-cyan-400 font-mono tracking-tight mt-1">
+                  {distanceCovered.toFixed(2)} <span className="text-[8px] text-slate-300">km</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Data Ingestion Pipeline */}
+          <DataIngestion onDataParsed={(data, url) => handleTelemetryIngested(data, url)} />
+
+          {/* Quick Sandbox Tester */}
+          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-330">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+              <svg width="16" height="16" className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
+              Quick Sandbox
+            </h2>
+            <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
+              Load mock research metrics to test operational AI reasoning immediately.
+            </p>
+            <button
+              id="inject-sandbox-button"
+              onClick={loadSampleTelemetry}
+              className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-medium text-white shadow-lg shadow-indigo-950/50"
+              aria-label="Inject Scenario Dataset"
+            >
+              Inject Scenario Dataset
+            </button>
+          </div>
+
+          {/* Translation Settings */}
+          <div className="bg-slate-900/40 border border-slate-900 rounded-xl p-5">
+            <label htmlFor="language-select" className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+              Translation Matrix
+            </label>
+            <select
+              id="language-select"
+              value={targetLanguage}
+              onChange={handleLanguageChange}
+              className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none transition cursor-pointer mb-3"
+              aria-label="Select target translation language"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.value} value={lang.value}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+            <button
+              id="listen-fan-button"
+              onClick={handleListenToFan}
+              disabled={isListening}
+              className={`w-full py-1.5 border transition rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
+                isListening
+                  ? "bg-red-950/40 border-red-800/40 text-red-400 animate-pulse"
+                  : "bg-indigo-950 hover:bg-indigo-900 border-indigo-850 text-indigo-400 hover:text-indigo-300"
+              }`}
+              aria-label="Listen to fan audio query speech in real time"
+            >
+              {isListening ? "🎙️ Listening..." : "🎤 Listen to Fan"}
+            </button>
+
+            {micPermissionBlocked && (
+              <p className="text-red-500 text-[11px] mt-2 font-medium">
+                🎤 Microphone access blocked. Please allow browser permissions to test live AI translation.
+              </p>
+            )}
+
+            {/* Manual Query Input Fallback */}
+            <div className="mt-3 pt-3 border-t border-slate-900/60">
+              <label htmlFor="manual-query-input" className="text-[10px] text-slate-300 font-bold uppercase tracking-wider block mb-2">
+                Or Type Fan Query Manually
+              </label>
+              <form onSubmit={handleManualQuerySubmit} className="flex gap-2">
+                <input
+                  id="manual-query-input"
+                  type="text"
+                  placeholder="e.g. Washroom kaha par hai"
+                  maxLength={200}
+                  value={manualQueryText}
+                  onChange={(e) => setManualQueryText(e.target.value)}
+                  className="flex-grow bg-slate-950 border border-slate-800 text-slate-100 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none transition"
+                  aria-label="Type fan speech query manually"
+                />
+                <button
+                  id="manual-translate-button"
+                  type="submit"
+                  disabled={isAiLoading}
+                  className="px-3 bg-indigo-950 hover:bg-indigo-900 border border-indigo-850 text-indigo-400 hover:text-indigo-300 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition"
+                  aria-label="Translate manual query"
+                >
+                  Translate
+                </button>
+              </form>
+            </div>
+
+            {capturedSTT && (
+              <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-2.5 text-xs" role="status" aria-live="polite">
+                <div>
+                  <span className="text-[10px] text-slate-300 uppercase font-mono block">Captured STT</span>
+                  <p className="text-slate-350 font-medium italic">"{capturedSTT}"</p>
+                </div>
+                <div className="border-t border-slate-900 pt-2 space-y-1.5">
+                  <div>
+                    <span className="text-[10px] text-slate-300 uppercase font-mono block">Detected Script/Language</span>
+                    <span className="text-emerald-455 font-semibold">{detectedLanguage}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-indigo-400 uppercase font-mono block">English Translation</span>
+                    <p className="text-slate-200 leading-normal font-semibold">"{englishTranslation}"</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-indigo-455 uppercase font-mono block">AI Tactical Instruction</span>
+                    <p className="text-slate-200 leading-relaxed font-sans">{tacticalInstruction}</p>
+                  </div>
+                </div>
+                <button
+                  id="clear-translation-log-button"
+                  onClick={() => {
+                    setCapturedSTT("");
+                    setDetectedLanguage("");
+                    setEnglishTranslation("");
+                    setTacticalInstruction("");
+                  }}
+                  className="text-[10px] text-slate-300 hover:text-slate-300 font-mono block w-full text-right mt-1 hover:underline cursor-pointer"
+                  aria-label="Clear captured translation log"
+                >
+                  Clear Log
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Web3 Volunteer Rewards Control Panel */}
+          <div className="bg-slate-900/50 border border-slate-900 rounded-xl p-5 text-slate-350 flex flex-col gap-3">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <svg width="16" height="16" className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v3m12-3V9a2 2 0 00-2-2h-3m-3 4H9M9 3h3" />
+              </svg>
+              Volunteer Rewards
+            </h2>
+            
+            {/* Styled Badge Visual Wrapper */}
+            <div className="relative overflow-hidden bg-gradient-to-br from-indigo-950/60 to-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-lg min-h-[140px] group">
+              <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 via-transparent to-transparent opacity-60 pointer-events-none" />
+              
+              {/* Badge Icon / Level Graphic */}
+              <div className="w-14 h-14 rounded-full bg-slate-900 border-2 border-indigo-500/40 flex items-center justify-center text-indigo-400 shadow-md shadow-indigo-950/50 mb-2 relative transition-transform duration-300 group-hover:scale-105">
+                <span className="text-xs font-black tracking-widest font-mono">
+                  LVL {currentNftLevel}
+                </span>
+              </div>
+              
+              <span className="text-[10px] text-indigo-300 uppercase tracking-widest font-bold">
+                Soulbound ERC-1155 NFT
+              </span>
+              <p className="text-xs text-white font-bold mt-1">
+                {VOLUNTEER_RANKS[currentNftLevel - 1] || "Novice Steward"}
+              </p>
+              {currentNftLevel < 10 ? (
+                <span className="text-[9px] text-slate-300 mt-0.5">
+                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> / {currentNftLevel * 2} for Lvl {currentNftLevel + 1}
+                </span>
+              ) : (
+                <span className="text-[9px] text-slate-300 mt-0.5">
+                  Tasks Completed: <strong className="text-slate-300">{tasksCompleted}</strong> (Max Level Reached)
+                </span>
+              )}
+            </div>
+
+            <p className="text-[10px] text-slate-400 leading-relaxed text-center font-medium">
+              Current Rank: <span className="text-slate-200">Level {currentNftLevel} - {VOLUNTEER_RANKS[currentNftLevel - 1]}</span>
+            </p>
+
+            {walletAddress ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs bg-slate-950/60 p-2 rounded-lg border border-slate-900">
+                  <span className="text-[10px] text-slate-300 font-mono">Address</span>
+                  <span className="text-emerald-400 font-mono font-semibold" title={walletAddress}>
+                    {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
+                  </span>
+                </div>
+                {currentNftLevel < 10 && tasksCompleted >= currentNftLevel * 2 && (
+                  <button
+                    id="claim-badge-button"
+                    onClick={() => triggerLevelUp(currentNftLevel + 1, walletAddress)}
+                    disabled={isMinting}
+                    className="w-full py-2 px-3 bg-emerald-650 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 cursor-pointer"
+                    aria-label={`Claim Level ${currentNftLevel + 1} Soulbound NFT Badge on Polygon`}
+                  >
+                    {isMinting ? "Minting..." : `🏆 Claim Rank ${currentNftLevel + 1} NFT`}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                id="connect-wallet-sidebar-button"
+                onClick={handleConnectWallet}
+                className="w-full py-2 px-3 bg-indigo-650 hover:bg-indigo-600 active:scale-[0.98] transition rounded-lg text-xs font-semibold text-white shadow-lg shadow-indigo-950/50 cursor-pointer"
+                aria-label="Connect Wallet"
+              >
+                Connect Wallet
+              </button>
+            )}
+          </div>
+
+          {/* Infrastructure Integration Hub Button */}
+          <button
+            id="connect-infra-button"
+            onClick={() => setIsInfraModalOpen(true)}
+            className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-300 active:scale-[0.98] transition rounded-lg text-xs font-semibold shadow-lg hover:shadow-indigo-950/20 cursor-pointer flex items-center justify-center gap-1.5 shrink-0 mt-1"
+            aria-label="Connect Infrastructure"
+          >
+            🔌 Connect Infrastructure
+          </button>
+        </aside>
       </div>
 
       {/* ═══ Zone Detail Modal ═══ */}
