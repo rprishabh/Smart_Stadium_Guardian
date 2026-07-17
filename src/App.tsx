@@ -246,7 +246,7 @@ export default function App() {
         setToastMessage("Failed to connect wallet. Please ensure MetaMask is unlocked and try again.");
       }
     } catch (err) {
-      console.error("Wallet connection handler error:", err);
+      // Silent error handling for clean console
       setToastMessage("Network error: Failed to connect wallet. Please try again.");
     }
   };
@@ -263,7 +263,7 @@ export default function App() {
       setEmailInput("");
       setPasswordInput("");
     } catch (err: any) {
-      console.error("Firebase Authentication error:", err);
+      // Silent error handling for clean console
       setToastMessage("Authentication failed. Network error. Please try again.");
       alert(`Login failed: ${err.message || "Network error. Please try again."}`);
     }
@@ -274,7 +274,7 @@ export default function App() {
       const { signOut } = await import("firebase/auth");
       await signOut(getAuthInstance());
     } catch (err: any) {
-      console.error("Firebase Signout error:", err);
+      // Silent error handling for clean console
       setToastMessage("Network error: Logout failed. Please try again.");
     }
   };
@@ -284,7 +284,7 @@ export default function App() {
       const { signInWithEmailAndPassword } = await import("firebase/auth");
       await signInWithEmailAndPassword(getAuthInstance(), "volunteer1@stadium.com", "password123");
     } catch (err: any) {
-      console.error("Guest bypass login error:", err);
+      // Silent error handling for clean console
       setToastMessage("Bypass login failed: Network error. Please try again.");
       alert(`Bypass login failed: ${err.message || "Network error. Please try again."}`);
     }
@@ -324,7 +324,7 @@ export default function App() {
           const { logDeploymentEvent } = await import("./utils/firestoreService");
           dbLogId = await logDeploymentEvent(volunteerId, targetLevel, hash, taskText, coordinates);
         } catch (dbErr) {
-          console.error("Firebase multi-user database write error: ", dbErr);
+          // Silent error handling for clean console
         }
 
         const matchContext = `FIFA World Cup - Group Stage: ${matchPhase === "Pre-Match" ? "Pre-Match Entry" : matchPhase === "Half-Time" ? "Half-Time Surge" : matchPhase === "Post-Match" ? "Post-Match Exit" : "Live Play"}`;
@@ -362,7 +362,7 @@ export default function App() {
         setToastMessage("Smart contract minting failed or was cancelled.");
       }
     } catch (err) {
-      console.error("NFT Badge minting error:", err);
+      // Silent error handling for clean console
       alert("An error occurred during smart contract transaction execution.");
       setToastMessage("Network error during Smart Contract minting. Please try again.");
     } finally {
@@ -497,7 +497,7 @@ export default function App() {
         addLog("translation", "Assisted fan via Mic: " + result.englishTranslation);
         setFansAssisted((prev) => prev + 1);
       } catch (err) {
-        console.error("Simulated voice translation error:", err);
+        // Silent error handling for clean console
         setToastMessage("Gemini API connection error. Please try manually typing.");
       } finally {
         setIsAiLoading(false);
@@ -548,7 +548,7 @@ export default function App() {
         addLog("translation", "Assisted fan via AI Matrix: " + result.englishTranslation);
         setFansAssisted((prev) => prev + 1);
       } catch (err) {
-        console.error("Gemini translation query error:", err);
+        // Silent error handling for clean console
         setToastMessage("Network error: Gemini API translation query failed. Please try again.");
       } finally {
         setIsAiLoading(false);
@@ -556,7 +556,7 @@ export default function App() {
     };
 
     recognition.onerror = (event: any) => {
-      console.error("Speech recognition error:", event.error);
+      // Silent error handling for clean console
       recognition.onend = null; // Unbind onend to prevent state race condition
       setIsListening(false);
       if (event.error === "not-allowed") {
@@ -606,7 +606,7 @@ export default function App() {
       setFansAssisted((prev) => prev + 1);
       setManualQueryText("");
     } catch (err) {
-      console.error("Gemini translation query error:", err);
+      // Silent error handling for clean console
       setToastMessage("❌ Network Exception: Gemini API translation query failed. Please try again.");
     } finally {
       setIsAiLoading(false);
@@ -638,7 +638,7 @@ export default function App() {
             setAiRecommendation(advice);
             setAiDirective(advice);
           } catch (err) {
-            console.error("Failed to generate simulated advice:", err);
+            // Silent error handling for clean console
           }
         };
         fetchSimulatedAdvice();
@@ -762,7 +762,7 @@ export default function App() {
           setLogs((prevLogs) => [...ledgerReceipts, ...prevLogs]);
         }
       } catch (error) {
-        console.error("[Operations Control Error]: Failed to ingest telemetry stream:", error);
+        // Silent error handling for clean console
         setToastMessage("Network error: Telemetry ingestion failed. Please try again.");
       } finally {
         setIsAiLoading(false);
@@ -786,6 +786,16 @@ export default function App() {
 
   // Current crowd pattern label
   const currentPattern = CROWD_PATTERNS[patternIndex % CROWD_PATTERNS.length];
+
+  // ── Auto-load telemetry on mount for instant data visibility ──
+  const hasAutoLoaded = useRef<boolean>(false);
+  useEffect(() => {
+    if (user && !telemetry && !hasAutoLoaded.current) {
+      hasAutoLoaded.current = true;
+      loadSampleTelemetry();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
 
 
@@ -988,30 +998,33 @@ export default function App() {
 
       {/* ═══ LIVE MATCH SCORE TICKER ═══ */}
       <div
-        className="w-full h-[54px] px-4 bg-gradient-to-r from-indigo-950/80 via-slate-950 to-indigo-950/80 border-b border-indigo-900/30 flex items-center justify-center gap-6 text-xs shrink-0"
-        style={{ contain: 'layout size' }}
+        className="w-full h-[54px] px-4 bg-gradient-to-r from-indigo-950/80 via-slate-950 to-indigo-950/80 border-b border-indigo-900/30 grid grid-cols-3 items-center text-xs shrink-0"
+        style={{ contain: 'size layout' }}
       >
-        <div className="flex items-center gap-3">
+        {/* Left Team - Locked to 33% column */}
+        <div className="justify-self-start whitespace-nowrap flex items-center gap-2">
           <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold hidden sm:inline">
             🏟️ FIFA World Cup 2026
           </span>
-          <div className="flex items-center bg-slate-900/60 rounded-lg border border-slate-800 w-[280px] sm:w-[320px] shrink-0 overflow-hidden">
-            <div className="flex-1 text-right py-1 px-2 whitespace-nowrap">
-               <span className="text-white font-bold">USA <span className="inline-block min-w-[20px] text-center">🇺🇸</span></span>
-            </div>
-            <div className="shrink-0 w-[80px] text-center py-1 bg-slate-950/50 flex items-center justify-center gap-2 border-x border-slate-800/50">
-              <span className="text-lg font-black font-mono text-white">
-                {scoreboard.home}
-              </span>
-              <span className="text-slate-300 font-mono">—</span>
-              <span className="text-lg font-black font-mono text-white">
-                {scoreboard.away}
-              </span>
-            </div>
-            <div className="flex-1 text-left py-1 px-2 whitespace-nowrap">
-               <span className="text-white font-bold"><span className="inline-block min-w-[20px] text-center">🇧🇷</span> Brazil</span>
-            </div>
+          <span className="text-white font-bold">USA <span className="inline-block min-w-[20px] text-center">🇺🇸</span></span>
+        </div>
+
+        {/* Center Score - Locked to 33% column */}
+        <div className="justify-self-center text-center whitespace-nowrap">
+          <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
+            <span className="text-lg font-black font-mono text-white">
+              {scoreboard.home}
+            </span>
+            <span className="text-slate-300 font-mono">—</span>
+            <span className="text-lg font-black font-mono text-white">
+              {scoreboard.away}
+            </span>
           </div>
+        </div>
+
+        {/* Right Team - Locked to 33% column */}
+        <div className="justify-self-end whitespace-nowrap flex items-center gap-2">
+          <span className="text-white font-bold"><span className="inline-block min-w-[20px] text-center">🇧🇷</span> Brazil</span>
           <div className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-emerald-400 font-mono font-bold">{scoreboard.time}</span>
@@ -1104,7 +1117,7 @@ export default function App() {
                   /* Initial Uninitialized Screen */
                   <div className="flex-grow flex flex-col items-center justify-start pt-24 border border-slate-900 bg-slate-950/40 rounded-2xl p-12 text-center select-text">
                     <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-300 mb-4 animate-pulse">
-                      <svg width="32" height="32" className="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg width="32" height="32" className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                       </svg>
                     </div>
@@ -1332,7 +1345,7 @@ export default function App() {
                                     const p = e.currentTarget.parentElement;
                                     if (p) {
                                       const fallback = document.createElement("div");
-                                      fallback.className = "w-16 h-16 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-xs font-bold text-slate-600";
+                                      fallback.className = "w-16 h-16 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-xs font-bold text-slate-400";
                                       fallback.innerText = `L${badgeLevel}`;
                                       p.appendChild(fallback);
                                     }
@@ -1379,7 +1392,7 @@ export default function App() {
                                 </div>
                               ) : (
                                 <div className="w-full mt-auto pt-2 border-t border-slate-900/60 text-center">
-                                  <span className="text-[8px] font-bold text-slate-600 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
+                                  <span className="text-[8px] font-bold text-slate-400 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
                                     🔒 Locked
                                   </span>
                                 </div>

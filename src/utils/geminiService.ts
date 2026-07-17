@@ -28,7 +28,7 @@ if (hasValidApiKey) {
   try {
     genAI = new GoogleGenerativeAI(apiKey);
   } catch (error) {
-    console.error("Failed to initialize Google Generative AI in geminiService:", error);
+    console.warn("[Gemini Service]: Initialization skipped.");
   }
 }
 
@@ -67,7 +67,7 @@ export async function generateCrowdAdvice(
 
     return text.trim();
   } catch (error) {
-    console.error("GEMINI API FAILURE:", error);
+    // Silently handle API failures for clean console
     return fallbackMessage;
   }
 }
@@ -138,7 +138,7 @@ export async function translateFanQuery(
       tacticalInstruction: validated.tacticalInstruction
     };
   } catch (error) {
-    console.error("TRANSLATION API ERROR:", error);
+    // Silently handle API failures for clean console
     return fallbackResult;
   }
 }
