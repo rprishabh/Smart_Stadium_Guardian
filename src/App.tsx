@@ -1362,12 +1362,12 @@ export default function App() {
           </header>
 
           {/* Dashboard Workspace */}
-          <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
+          <div className="flex-grow flex flex-col xl:flex-row overflow-hidden">
 
             {/* Central Workspace Pane */}
             <section className="flex-grow overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6 min-w-0">
               {/* Dashboard Tab Buttons (Mobile Viewport) */}
-              <div className="flex border-b border-slate-900 lg:hidden shrink-0 mb-2">
+              <div className="flex border-b border-slate-900 xl:hidden shrink-0 mb-2">
                 <button
                   onClick={() => setActiveTab("dashboard")}
                   className={`flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-b-2 transition ${
@@ -1387,7 +1387,7 @@ export default function App() {
               </div>
 
               {/* Central Content Panel */}
-              <div className={`flex-grow flex flex-col gap-6 ${activeTab === "dashboard" ? "flex" : "hidden lg:flex"}`}>
+              <div className={`flex-grow flex flex-col gap-6 ${activeTab === "dashboard" ? "flex" : "hidden xl:flex"}`}>
                 {telemetry === null ? (
                   /* Initial Uninitialized Screen */
                   <div className="flex-grow flex flex-col items-center justify-start pt-24 border border-slate-900 bg-slate-950/40 rounded-2xl p-12 text-center select-text">
@@ -1682,7 +1682,7 @@ export default function App() {
               </div>
 
               {/* Mobile Block Explorer logs tab view */}
-              <div className={`flex-grow ${activeTab === "blockchain" ? "block" : "hidden lg:hidden"} space-y-6`}>
+              <div className={`flex-grow ${activeTab === "blockchain" ? "block" : "hidden xl:hidden"} space-y-6`}>
                 {renderTimeline()}
                 <Suspense fallback={<div className="text-slate-400 text-xs p-4">Loading logs...</div>}>
                   <SecurityLog logs={logs} />
@@ -1691,7 +1691,7 @@ export default function App() {
             </section>
 
             {/* Right Sidebar Audit Log (Desktop Pane) */}
-            <aside className="w-full lg:w-96 border-l border-slate-900 bg-slate-950 p-6 hidden lg:flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar">
+            <aside className="w-full xl:w-96 border-l border-slate-900 bg-slate-950 p-6 hidden xl:flex flex-col gap-6 shrink-0 overflow-y-auto custom-scrollbar">
               {renderTimeline()}
               <Suspense fallback={<div className="text-slate-400 text-xs p-4">Loading logs...</div>}>
                 <SecurityLog logs={logs} />

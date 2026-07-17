@@ -34,6 +34,27 @@ export async function evaluateStadiumMetrics(
 ): Promise<string> {
   const fallbackMessage = "AI offline. Please refer to standard manual crowd control protocols.";
 
+  // Generate a caching key based on telemetry signature, language, and CCTV URL
+  const cacheKey = `gemini_directive_${JSON.stringify({
+    telemetry: telemetry.map((pt) => ({
+      zone: pt.zoneId,
+      cap: pt.gateCapacityPercentage,
+      incidents: pt.activeIncidentsCount,
+    })),
+    userLanguage,
+    cctvUrl,
+  })}`;
+
+  try {
+    const cachedResult = sessionStorage.getItem(cacheKey);
+    if (cachedResult) {
+      console.log("[Gemini Engine]: Returning cached operational directive.");
+      return cachedResult;
+    }
+  } catch (cacheError) {
+    console.warn("[Gemini Engine]: Caching check failed:", cacheError);
+  }
+
   if (!genAI) {
     return fallbackMessage;
   }
@@ -78,9 +99,22 @@ Instructions:
       return fallbackMessage;
     }
 
-    return text.trim();
-  } catch (error) {
+    const trimmedText = text.trim();
+
+    try {
+      sessionStorage.setItem(cacheKey, trimmedText);
+    } catch (cacheError) {
+      console.warn("[Gemini Engine]: Failed to save to cache:", cacheError);
+    }
+
+    return trimmedText;
+  } catch (error: any) {
     console.error("GEMINI API FAILURE:", error);
+    // Gracefully handle rate limit (429) errors without getting stuck in infinite loops
+    if (error?.message?.includes("429") || error?.status === 429) {
+      console.warn("[Gemini Engine]: Rate limit (429) detected. Returning offline fallback.");
+      return "RATE_LIMIT_EXCEEDED: Stadium Guardian core operational grid overloaded. Proceed with standard manual crowd containment protocols.";
+    }
     return fallbackMessage;
   }
 }
