@@ -81,7 +81,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {this.state.error && (
               <div className="w-full bg-slate-950/80 p-3 rounded-lg border border-slate-800 text-left">
-                <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold block mb-1">
+                <span className="text-[9px] text-slate-300 uppercase tracking-widest font-bold block mb-1">
                   Diagnostics Payload
                 </span>
                 <p className="text-[10px] font-mono text-red-300 break-all leading-normal">

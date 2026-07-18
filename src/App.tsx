@@ -113,7 +113,7 @@ function getScoreboardData(phase: string) {
 //  App Component
 // ══════════════════════════════════════════════════
 export default function App() {
-  const [telemetry, setTelemetry] = useState<TelemetryPoint[] | null>(null);
+  const [telemetry, setTelemetry] = useState<TelemetryPoint[] | null>(SAMPLE_TELEMETRY);
   const [prevTelemetry, setPrevTelemetry] = useState<TelemetryPoint[] | null>(null);
   const [logs, setLogs] = useState<SecurityIncidentLog[]>([]);
   const [targetLanguage, setTargetLanguage] = useState<string>("English");
@@ -1012,14 +1012,11 @@ export default function App() {
         {/* Center Score - Locked to 33% column */}
         <div className="justify-self-center text-center whitespace-nowrap">
           <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
-            <span className="text-lg font-black font-mono text-white">
-              {scoreboard.home}
-            </span>
-            <span className="text-slate-300 font-mono">—</span>
-            <span className="text-lg font-black font-mono text-white">
-              {scoreboard.away}
+            <span className="text-lg font-black font-mono text-white inline-block min-w-[6ch] text-center">
+              {scoreboard.home} — {scoreboard.away}
             </span>
           </div>
+          <div className="text-[9px] uppercase tracking-widest text-slate-300 font-mono font-bold mt-0.5">Pre-Game</div>
         </div>
 
         {/* Right Team - Locked to 33% column */}
@@ -1033,7 +1030,7 @@ export default function App() {
       </div>
 
       {/* ═══ MAIN LAYOUT ═══ */}
-      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden">
+      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden min-h-[85vh]" style={{ contain: "layout size style" }}>
         {/* ── Main Workspace (Right Pane) ── */}
         <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
 
@@ -1353,10 +1350,10 @@ export default function App() {
                                 />
                               </div>
 
-                              <span className="text-[9px] font-mono text-slate-300 block mb-1">
+                              <span className="text-[9px] font-mono text-slate-50 font-semibold block mb-1">
                                 Level {badgeLevel}
                               </span>
-                              <span className="text-[10px] font-bold text-slate-200 leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
+                              <span className="text-[10px] font-bold text-white leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
                                 {rankName}
                               </span>
 
@@ -1392,7 +1389,7 @@ export default function App() {
                                 </div>
                               ) : (
                                 <div className="w-full mt-auto pt-2 border-t border-slate-900/60 text-center">
-                                  <span className="text-[8px] font-bold text-slate-400 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
+                                  <span className="text-[8px] font-bold text-amber-400 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
                                     🔒 Locked
                                   </span>
                                 </div>

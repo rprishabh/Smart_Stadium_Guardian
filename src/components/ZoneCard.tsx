@@ -67,7 +67,7 @@ const ZoneCard: React.FC<ZoneCardProps> = ({
               <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
             )}
           </h4>
-          <span className="text-[10px] text-slate-500 font-mono">
+          <span className="text-[10px] text-slate-300 font-mono font-medium">
             Throughput: {point.securityThroughputPerMin}/min
           </span>
         </div>
@@ -149,7 +149,7 @@ const ZoneCard: React.FC<ZoneCardProps> = ({
                 className={`w-full py-1.5 px-3 rounded-lg text-[10px] font-bold transition duration-200 flex items-center justify-center gap-1.5 ${
                   hasMetaMask
                     ? "bg-indigo-950/50 hover:bg-indigo-900 border border-indigo-500/30 hover:border-indigo-500/50 text-indigo-400 hover:text-white cursor-pointer"
-                    : "bg-slate-800 border border-slate-700 text-slate-500 cursor-not-allowed opacity-50"
+                    : "bg-slate-800 border border-slate-700 text-slate-300 cursor-not-allowed opacity-60"
                 }`}
               >
                 <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -35,7 +35,7 @@ function getDensityInfo(point?: TelemetryPoint): {
   if (!point) {
     return {
       badge: "Offline",
-      color: "text-slate-500",
+      color: "text-slate-300",
       bgColor: "bg-slate-800/60",
       suggestion: "Sensor data unavailable. Manual inspection recommended.",
     };

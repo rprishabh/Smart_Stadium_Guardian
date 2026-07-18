@@ -112,21 +112,21 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
           {/* Three-column stats */}
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Throughput</span>
+              <span className="text-[10px] text-slate-300 uppercase tracking-wider block mb-1">Throughput</span>
               <span className="text-lg font-bold font-mono text-indigo-400">{point.securityThroughputPerMin}</span>
-              <span className="text-[10px] text-slate-500 block">/min</span>
+              <span className="text-[10px] text-slate-300 block">/min</span>
             </div>
             <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Concession Wait</span>
+              <span className="text-[10px] text-slate-300 uppercase tracking-wider block mb-1">Concession Wait</span>
               <span className="text-lg font-bold font-mono text-slate-200">{point.concessionWaitTimeMins}</span>
-              <span className="text-[10px] text-slate-500 block">mins</span>
+              <span className="text-[10px] text-slate-300 block">mins</span>
             </div>
             <div className={`rounded-xl p-3 text-center ${hasIncidents ? "bg-amber-950/20 border border-amber-900/40" : "bg-slate-950/60 border border-slate-800"}`}>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Incidents</span>
+              <span className="text-[10px] text-slate-300 uppercase tracking-wider block mb-1">Incidents</span>
               <span className={`text-lg font-bold font-mono ${hasIncidents ? "text-amber-400" : "text-slate-200"}`}>
                 {point.activeIncidentsCount}
               </span>
-              <span className="text-[10px] text-slate-500 block">active</span>
+              <span className="text-[10px] text-slate-300 block">active</span>
             </div>
           </div>
 
@@ -148,7 +148,7 @@ const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ point, onClose }) => 
 
         {/* Footer */}
         <div className="px-6 py-3 border-t border-slate-800 flex items-center justify-between bg-slate-950/40">
-          <span className="text-[10px] text-slate-500 font-mono">
+          <span className="text-[10px] text-slate-300 font-mono">
             Last updated: {new Date(point.timestamp).toLocaleTimeString()}
           </span>
           <button

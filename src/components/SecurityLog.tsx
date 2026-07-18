@@ -44,12 +44,12 @@ export const SecurityLog: React.FC<SecurityLogProps> = ({ logs }) => {
         aria-label="Security Incident Audit Log"
       >
         {logs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-slate-500 py-12">
-            <svg width="40" height="40" className="w-10 h-10 mb-3 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex flex-col items-center justify-center h-full text-slate-300 py-12">
+            <svg width="40" height="40" className="w-10 h-10 mb-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <p className="text-sm font-medium">No recorded incidents on the ledger.</p>
-            <p className="text-xs text-slate-600 mt-1">System monitoring is active and operating normally.</p>
+            <p className="text-xs text-slate-400 mt-1">System monitoring is active and operating normally.</p>
           </div>
         ) : (
           <ul className="space-y-3" aria-label="Security logs list">
@@ -67,7 +67,7 @@ export const SecurityLog: React.FC<SecurityLogProps> = ({ logs }) => {
                       <span className="text-[10px] text-indigo-400 font-semibold px-1.5 py-0.2 bg-indigo-950/45 rounded">
                         {log.zone}
                       </span>
-                      <span className="text-[10px] text-slate-500 font-medium">
+                      <span className="text-[10px] text-slate-300 font-medium">
                         {log.timestamp}
                       </span>
                       {log.isRealTx && (
@@ -82,7 +82,7 @@ export const SecurityLog: React.FC<SecurityLogProps> = ({ logs }) => {
                   </div>
 
                   <div className="shrink-0 flex items-center md:flex-col md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-800/40 pt-2 md:pt-0">
-                    <span className="text-[10px] text-slate-500 font-mono hidden md:inline">Tx Hash</span>
+                    <span className="text-[10px] text-slate-300 font-mono hidden md:inline">Tx Hash</span>
                     {log.isRealTx && !isFailed ? (
                       /* Real on-chain transaction → clickable Polygonscan link */
                       <a
