@@ -3,7 +3,6 @@ import { TelemetryPoint } from "../types/telemetry";
 
 // Retrieve API Key cleanly
 const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "";
-// Modified: only block the explicit boilerplate placeholder string itself
 const hasValidApiKey = apiKey && apiKey !== "your_gemini_api_key_here" && apiKey.trim() !== "";
 
 let genAI: GoogleGenerativeAI | null = null;
@@ -20,6 +19,17 @@ if (hasValidApiKey) {
 }
 
 /**
+ * Sanitizes input strings by stripping HTML/script tags and neutralizing prompt injection vectors.
+ */
+export function sanitizeInput(input: string): string {
+  if (!input) return "";
+  return input
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/(ignore previous instructions|system prompt|overwrite instructions|system:)/gi, "[redacted]")
+    .trim();
+}
+
+/**
  * Evaluates stadium telemetry metrics in correlation with live CCTV streams.
  * 
  * @param telemetry List of telemetry data points for active stadium zones.
@@ -33,6 +43,8 @@ export async function evaluateStadiumMetrics(
   cctvUrl: string
 ): Promise<string> {
   const fallbackMessage = "AI offline. Please refer to standard manual crowd control protocols.";
+  const safeLanguage = sanitizeInput(userLanguage);
+  const safeCctvUrl = sanitizeInput(cctvUrl);
 
   // Generate a caching key based on telemetry signature, language, and CCTV URL
   const cacheKey = `gemini_directive_${JSON.stringify({
@@ -41,14 +53,14 @@ export async function evaluateStadiumMetrics(
       cap: pt.gateCapacityPercentage,
       incidents: pt.activeIncidentsCount,
     })),
-    userLanguage,
-    cctvUrl,
+    userLanguage: safeLanguage,
+    cctvUrl: safeCctvUrl,
   })}`;
 
   try {
     const cachedResult = sessionStorage.getItem(cacheKey);
     if (cachedResult) {
-      console.log("[Gemini Engine]: Returning cached operational directive.");
+      // SILENT RETURN: No console.log here to ensure production cleanliness
       return cachedResult;
     }
   } catch (cacheError) {
@@ -74,13 +86,13 @@ export async function evaluateStadiumMetrics(
 Analyze the following real-time telemetry metrics:
 ${serializedMetrics}
 
-Live CCTV Feed Reference: ${cctvUrl || "No active stream URL configured."}
+Live CCTV Feed Reference: ${safeCctvUrl || "No active stream URL configured."}
 
 Instructions:
 1. Identify and flag any bottlenecks where gate capacity exceeds 80% or active incidents count is greater than 0.
 2. Simulate analyzing the provided CCTV feed URL in conjunction with the telemetry data to generate contextual crowd control directives. If the CCTV URL is provided, mention it in the context of the visual feed logs.
 3. Generate a highly strategic, actionable, and concise operational directive specifically for frontline volunteers and security staff.
-4. Translate the response perfectly into the requested language: "${userLanguage}".
+4. Translate the response perfectly into the requested language: "${safeLanguage}".
 5. Output ONLY the directive text. Do not write intros, explanations, markdown wrappers, or metadata.`;
 
     const apiCallPromise = model.generateContent({

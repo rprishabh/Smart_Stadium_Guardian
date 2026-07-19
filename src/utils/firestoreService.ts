@@ -29,7 +29,7 @@ export async function logDeploymentEvent(
             status: "Verified On-Chain",
             timestamp: serverTimestamp()
         });
-        console.log("Google Firebase multi-user audit log synced. ID: ", docRef.id);
+        console.info("Google Firebase multi-user audit log synced. ID: ", docRef.id);
         return docRef.id;
     } catch (error) {
         console.error("Firebase multi-user database write error: ", error);
