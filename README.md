@@ -1,4 +1,4 @@
-# 🛡️ Stadium Guardian - FIFA World Cup Ops Centre
+# 🛡️ Stadium Guardian - FIFA World Cup Ops center
 
 An AI-powered, Web3-enabled smart event operations dashboard designed to coordinate frontline volunteers, automate multi-sector crowd control dynamics, and protect stadium integrity for mega-scale global sporting events like the FIFA World Cup 2026.
 
@@ -56,7 +56,7 @@ To ensure enterprise-grade reliability and accountability, Stadium Guardian is b
 
 ## ⚙️ Local Setup & Verification
 
-Follow these precise steps to securely install dependencies and evaluate the Stadium Guardian operations centre.
+Follow these precise steps to securely install dependencies and evaluate the Stadium Guardian operations center.
 
 **1. Clone the Repository & Install**
 
