@@ -1015,7 +1015,7 @@ export default function App() {
               {scoreboard.home} — {scoreboard.away}
             </span>
           </div>
-          <div className="text-[9px] uppercase tracking-widest text-slate-300 font-mono font-bold mt-0.5">Pre-Game</div>
+          <div className="text-[9px] uppercase tracking-widest text-slate-300 font-mono font-bold mt-0.5">{scoreboard.time}</div>
         </div>
 
         {/* Right Team - Locked to 33% column */}
@@ -1333,11 +1333,12 @@ export default function App() {
                                   <img
                                     src={ipfsUrl}
                                     alt={`${rankName} NFT Badge`}
-                                    width={64}
-                                    height={64}
+                                    width="64"
+                                    height="80"
+                                    fetchPriority="high"
+                                    loading="eager"
                                     decoding="async"
-                                    loading="lazy"
-                                    className="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110"
+                                    className="w-16 h-20 object-contain transition-transform duration-300 group-hover:scale-110"
                                     onError={(e) => {
                                       e.currentTarget.style.display = "none";
                                       const p = e.currentTarget.parentElement;
@@ -1767,6 +1768,11 @@ export default function App() {
               <img
                 src={getBadgeIpfsUrl(rankUpData.level, rankUpData.title)}
                 alt={`${rankUpData.title} NFT Badge`}
+                width="320"
+                height="320"
+                fetchPriority="high"
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-contain transform transition-transform duration-500 hover:scale-105 select-none z-10 filter drop-shadow-[0_10px_20px_rgba(99,102,241,0.25)]"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
