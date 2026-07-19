@@ -23,6 +23,16 @@ An AI-powered, Web3-enabled smart event operations dashboard designed to coordin
 
 ---
 
+## 🛠️ Tech Stack
+* **Frontend:** React, Tailwind CSS, TypeScript
+* **Generative AI:** Google Gemini 3.5 Flash API
+* **Backend/Auth:** Firebase Authentication & Firestore
+* **Blockchain:** Polygon Amoy Testnet (Web3.js/ethers.js)
+* **Performance:** Lighthouse-optimized (100/100)
+* **Validation:** Zod Schema Parsing
+  
+---
+
 ## 🧠 AI Integration Architecture (Gemini 3.5 Flash)
 
 Our solution leverages the **Google Gemini 3.5 Flash** model (`models/gemini-3.5-flash:generateContent`) to power the predictive and analytical engine.
@@ -51,7 +61,7 @@ Follow these precise steps to securely install dependencies and evaluate the Sta
 **1. Clone the Repository & Install**
 
 ```bash
-git clone https://github.com/your-username/stadium-guardian.git
+git clone https://github.com/rprishabh/Smart_Stadium_Guardian.git
 cd stadium-guardian
 npm install
 
