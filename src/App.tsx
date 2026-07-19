@@ -1009,7 +1009,7 @@ export default function App() {
         </div>
 
         {/* Center Score - Locked to 33% column */}
-        <div className="justify-self-center text-center whitespace-nowrap">
+        <div className="justify-self-center text-center whitespace-nowrap h-[40px] flex flex-col justify-center items-center">
           <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
             <span className="text-lg font-black font-mono text-white inline-block min-w-[6ch] text-center">
               {scoreboard.home} — {scoreboard.away}
@@ -1029,7 +1029,7 @@ export default function App() {
       </div>
 
       {/* ═══ MAIN LAYOUT ═══ */}
-      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-visible lg:overflow-hidden min-h-[85vh]">
+      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-visible lg:overflow-hidden min-h-[85vh]" style={{ contain: "paint layout" }}>
         {/* ── Main Workspace (Right Pane) ── */}
         <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
 
@@ -1083,7 +1083,7 @@ export default function App() {
           </header>
 
           {/* Dashboard Workspace */}
-          <div className="flex-grow flex flex-col xl:flex-row overflow-visible xl:overflow-hidden">
+          <div className="flex-grow flex flex-col xl:flex-row overflow-visible xl:overflow-hidden" style={{ contain: "paint layout" }}>
 
             {/* Central Workspace Pane */}
             <section className="flex-grow overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6 min-w-0">
@@ -1328,46 +1328,54 @@ export default function App() {
                               }`}
                             >
                               {/* Badge Image */}
-                              <div className="w-16 h-16 mb-2 relative flex items-center justify-center">
-                                <img
-                                  src={ipfsUrl}
-                                  alt={`${rankName} NFT Badge`}
-                                  className={`w-full h-full object-contain transition-transform duration-300 ${
-                                    isUnlocked ? "group-hover:scale-110" : ""
-                                  }`}
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = "none";
-                                    const p = e.currentTarget.parentElement;
-                                    if (p) {
-                                      const fallback = document.createElement("div");
-                                      fallback.className = "w-16 h-16 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-xs font-bold text-slate-400";
-                                      fallback.innerText = `L${badgeLevel}`;
-                                      p.appendChild(fallback);
-                                    }
-                                  }}
-                                />
+                              <div className="w-16 h-16 mb-2 relative flex items-center justify-center shrink-0">
+                                {isUnlocked ? (
+                                  <img
+                                    src={ipfsUrl}
+                                    alt={`${rankName} NFT Badge`}
+                                    width={64}
+                                    height={64}
+                                    decoding="async"
+                                    loading="lazy"
+                                    className="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                      const p = e.currentTarget.parentElement;
+                                      if (p && !p.querySelector(".badge-fallback")) {
+                                        const fallback = document.createElement("div");
+                                        fallback.className = "badge-fallback w-16 h-16 rounded-full bg-slate-900 border-2 border-indigo-500/20 flex items-center justify-center text-xs font-bold text-indigo-400";
+                                        fallback.innerText = `L${badgeLevel}`;
+                                        p.appendChild(fallback);
+                                      }
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="w-16 h-16 rounded-full bg-slate-900/90 border border-slate-800/90 flex flex-col items-center justify-center text-[10px] font-bold text-slate-400 group-hover:border-slate-700 transition">
+                                    <span className="text-sm">🛡️</span>
+                                    <span>L{badgeLevel}</span>
+                                  </div>
+                                )}
                               </div>
 
-                              <span className="text-[9px] font-mono text-slate-50 font-semibold block mb-1">
+                              <span className="text-[10px] font-mono text-slate-100 font-bold block mb-1">
                                 Level {badgeLevel}
                               </span>
-                              <span className="text-[10px] font-bold text-white leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
+                              <span className="text-[11px] font-bold text-white leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
                                 {rankName}
                               </span>
 
                               {/* Detailed Achievement History Matrix */}
                               {isUnlocked ? (
-                                <div className="w-full text-left mt-2 pt-2 border-t border-slate-900/60 space-y-1.5 text-[9px] font-medium text-slate-400">
+                                <div className="w-full text-left mt-2 pt-2 border-t border-slate-900/60 space-y-1.5 text-[10px] font-medium text-slate-200">
                                   <div>
-                                    <span className="text-[8px] text-slate-300 block">Match Context</span>
-                                    <span className="text-slate-350 leading-tight block font-semibold text-left">
+                                    <span className="text-[10px] text-slate-200 font-bold block">Match Context</span>
+                                    <span className="text-slate-100 leading-tight block font-semibold text-left">
                                       {receipt?.matchContext || DEFAULT_BADGE_DETAILS[badgeLevel]?.matchContext}
                                     </span>
                                   </div>
                                   <div>
-                                    <span className="text-[8px] text-slate-300 block">Sector Action</span>
-                                    <span className="text-slate-350 leading-tight block font-semibold text-left">
+                                    <span className="text-[10px] text-slate-200 font-bold block">Sector Action</span>
+                                    <span className="text-slate-100 leading-tight block font-semibold text-left">
                                       {receipt?.sectorAction || DEFAULT_BADGE_DETAILS[badgeLevel]?.sectorAction}
                                     </span>
                                   </div>
