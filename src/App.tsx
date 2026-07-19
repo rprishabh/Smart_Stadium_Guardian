@@ -999,7 +999,6 @@ export default function App() {
       {/* ═══ LIVE MATCH SCORE TICKER ═══ */}
       <div
         className="w-full h-[54px] px-4 bg-gradient-to-r from-indigo-950/80 via-slate-950 to-indigo-950/80 border-b border-indigo-900/30 grid grid-cols-3 items-center text-xs shrink-0"
-        style={{ contain: 'size layout' }}
       >
         {/* Left Team - Locked to 33% column */}
         <div className="justify-self-start whitespace-nowrap flex items-center gap-2">
@@ -1030,7 +1029,7 @@ export default function App() {
       </div>
 
       {/* ═══ MAIN LAYOUT ═══ */}
-      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden min-h-[85vh]" style={{ contain: "layout size style" }}>
+      <div className="flex-grow grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-visible lg:overflow-hidden min-h-[85vh]">
         {/* ── Main Workspace (Right Pane) ── */}
         <main className="flex-grow flex flex-col min-w-0 bg-slate-950/20">
 
@@ -1084,7 +1083,7 @@ export default function App() {
           </header>
 
           {/* Dashboard Workspace */}
-          <div className="flex-grow flex flex-col xl:flex-row overflow-hidden">
+          <div className="flex-grow flex flex-col xl:flex-row overflow-visible xl:overflow-hidden">
 
             {/* Central Workspace Pane */}
             <section className="flex-grow overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6 min-w-0">
