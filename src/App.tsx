@@ -1324,7 +1324,7 @@ export default function App() {
                               className={`relative border rounded-xl p-4 flex flex-col items-center justify-between text-center transition-all duration-500 overflow-hidden bg-slate-950/40 group ${
                                 isUnlocked
                                   ? "border-emerald-500/30 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/10 scale-100 animate-fade-in"
-                                  : "border-slate-800/80 grayscale opacity-40"
+                                  : "border-slate-800/80 grayscale opacity-80"
                               }`}
                             >
                               {/* Badge Image */}
@@ -1351,17 +1351,17 @@ export default function App() {
                                     }}
                                   />
                                 ) : (
-                                  <div className="w-16 h-16 rounded-full bg-slate-900/90 border border-slate-800/90 flex flex-col items-center justify-center text-[10px] font-bold text-slate-400 group-hover:border-slate-700 transition">
+                                  <div className="w-16 h-16 rounded-full bg-slate-900/90 border border-slate-700 flex flex-col items-center justify-center text-[10px] font-bold text-slate-300 group-hover:border-slate-600 transition">
                                     <span className="text-sm">🛡️</span>
-                                    <span>L{badgeLevel}</span>
+                                    <span className="text-slate-200">L{badgeLevel}</span>
                                   </div>
                                 )}
                               </div>
 
-                              <span className="text-[10px] font-mono text-slate-100 font-bold block mb-1">
+                              <span className={`text-[10px] font-mono font-bold block mb-1 ${isUnlocked ? "text-slate-100" : "text-slate-300"}`}>
                                 Level {badgeLevel}
                               </span>
-                              <span className="text-[11px] font-bold text-white leading-tight block mb-2 min-h-[24px] flex items-center justify-center">
+                              <span className={`text-[11px] font-bold leading-tight block mb-2 min-h-[24px] flex items-center justify-center ${isUnlocked ? "text-white" : "text-slate-200"}`}>
                                 {rankName}
                               </span>
 
@@ -1397,7 +1397,7 @@ export default function App() {
                                 </div>
                               ) : (
                                 <div className="w-full mt-auto pt-2 border-t border-slate-900/60 text-center">
-                                  <span className="text-[8px] font-bold text-amber-400 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
+                                  <span className="text-[9px] font-bold text-amber-300 tracking-wide uppercase inline-flex items-center gap-1 justify-center">
                                     🔒 Locked
                                   </span>
                                 </div>
