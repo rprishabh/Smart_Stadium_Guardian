@@ -1,7 +1,26 @@
-import { sanitizeInput, evaluateStadiumMetrics } from "./geminiEngine";
+import { sanitizeInput, evaluateStadiumMetrics, GeminiDirectiveSchema } from "./geminiEngine";
 import { TelemetryPoint } from "../types/telemetry";
 
 describe("Gemini AI Engine & Sanitization Suite", () => {
+  describe("GeminiDirectiveSchema (Zod Runtime Validation)", () => {
+    test("validates valid LLM directive schema output successfully", () => {
+      const validPayload = {
+        directive: "Deploy 4 volunteers to Gate A to relieve 88% capacity choke point.",
+        confidenceScore: 0.95,
+        recommendedAction: "Reroute traffic to Gate B",
+      };
+      const parsed = GeminiDirectiveSchema.safeParse(validPayload);
+      expect(parsed.success).toBe(true);
+    });
+
+    test("fails validation when directive string is under 10 characters", () => {
+      const invalidPayload = {
+        directive: "Short",
+      };
+      const parsed = GeminiDirectiveSchema.safeParse(invalidPayload);
+      expect(parsed.success).toBe(false);
+    });
+  });
   describe("sanitizeInput", () => {
     test("strips HTML script and markup tags cleanly", () => {
       const maliciousHtml = "<script>alert('xss')</script><b>Zone North</b>";

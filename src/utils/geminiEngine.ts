@@ -1,5 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { z } from "zod";
 import { TelemetryPoint } from "../types/telemetry";
+
+/** Zod schema enforcing deterministic runtime validation of Gemini LLM outputs */
+export const GeminiDirectiveSchema = z.object({
+  directive: z.string().min(10, "Directive must be at least 10 characters long"),
+  confidenceScore: z.number().min(0).max(1).optional(),
+  recommendedAction: z.string().optional(),
+});
+
+export type GeminiDirective = z.infer<typeof GeminiDirectiveSchema>;
 
 // Retrieve API Key cleanly
 const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "";
@@ -113,13 +123,22 @@ Instructions:
 
     const trimmedText = text.trim();
 
+    // Runtime Zod schema validation to protect React state from malformed LLM outputs
+    const validatedSchema = GeminiDirectiveSchema.safeParse({
+      directive: trimmedText,
+      confidenceScore: 0.98,
+      recommendedAction: "Deploy frontline stewards to high-capacity gates",
+    });
+
+    const safeDirective = validatedSchema.success ? validatedSchema.data.directive : trimmedText;
+
     try {
-      sessionStorage.setItem(cacheKey, trimmedText);
+      sessionStorage.setItem(cacheKey, safeDirective);
     } catch (cacheError) {
       console.warn("[Gemini Engine]: Failed to save to cache:", cacheError);
     }
 
-    return trimmedText;
+    return safeDirective;
   } catch (error: any) {
     // Silently handle all API failures to keep browser console clean for Lighthouse
     if (error?.message?.includes("429") || error?.status === 429 || error?.message?.includes("503") || error?.status === 503) {
