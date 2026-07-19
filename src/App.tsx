@@ -1009,13 +1009,13 @@ export default function App() {
         </div>
 
         {/* Center Score - Locked to 33% column */}
-        <div className="justify-self-center text-center whitespace-nowrap h-[40px] flex flex-col justify-center items-center">
-          <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800">
-            <span className="text-lg font-black font-mono text-white inline-block min-w-[6ch] text-center">
+        <div className="justify-self-center text-center whitespace-nowrap h-[40px] w-[140px] shrink-0 flex flex-col justify-center items-center">
+          <div className="flex items-center justify-center gap-2 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-800 w-full">
+            <span className="text-lg font-black font-mono text-white inline-block w-full text-center">
               {scoreboard.home} — {scoreboard.away}
             </span>
           </div>
-          <div className="text-[9px] uppercase tracking-widest text-slate-300 font-mono font-bold mt-0.5">{scoreboard.time}</div>
+          <div className="text-[9px] uppercase tracking-widest text-slate-300 font-mono font-bold mt-0.5 w-full text-center truncate">{scoreboard.time}</div>
         </div>
 
         {/* Right Team - Locked to 33% column */}
