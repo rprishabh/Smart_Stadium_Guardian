@@ -1,18 +1,4 @@
-To answer your question right out of the gate: **Yes, absolutely keep the emojis!**
-
-Using emojis in a GitHub `README.md` does not look childish at all. In fact, it is an industry best practice for modern open-source repositories and hackathon submissions. They act as **visual anchors**, breaking up walls of text and making it incredibly easy for a judge (or an AI bot) to scan the document and instantly find the "Problem Statement" 🎯, the "Architecture" 🧠, or the "Setup Instructions" ⚙️. It will look vibrant, professional, and well-structured on your GitHub profile.
-
-### A Quick Word on the Content Structure
-
-Because you appended the new sections directly to the end of the old sections, you currently have a bit of redundancy. For example, you have two sections talking about Gemini 3.5 Flash orchestration, two sections on "Architectural Elegance," and two lists of instructions on how to run it.
-
-To maximize that AI evaluator score and keep human judges engaged, the document needs to be ruthless, concise, and cohesive.
-
-Here is the fully merged, ultimate version. It combines your heavy-hitting technical details (Zod validation, Web3, Polygon) with the NLP-optimized keywords I provided earlier, eliminating all the duplicates.
-
----
-
-# 🛡️ Stadium Guardian - FIFA World Cup Ops Centre
+# 🛡️ Stadium Guardian - FIFA World Cup Ops center
 
 An AI-powered, Web3-enabled smart event operations dashboard designed to coordinate frontline volunteers, automate multi-sector crowd control dynamics, and protect stadium integrity for mega-scale global sporting events like the FIFA World Cup 2026.
 
@@ -35,6 +21,16 @@ An AI-powered, Web3-enabled smart event operations dashboard designed to coordin
 * **Accessibility & Edge Performance:** Engineered for a perfect 100/100 Lighthouse score utilizing WCAG AAA compliant high-contrast tokens, ensuring the dashboard is flawlessly usable in high-stress, low-visibility environments.
 * **Secure Authentication:** Protected via Firebase Auth with a custom-engineered "Guest Judge Bypass" state for frictionless evaluation.
 
+---
+
+## 🛠️ Tech Stack
+* **Frontend:** React, Tailwind CSS, TypeScript
+* **Generative AI:** Google Gemini 3.5 Flash API
+* **Backend/Auth:** Firebase Authentication & Firestore
+* **Blockchain:** Polygon Amoy Testnet (Web3.js/ethers.js)
+* **Performance:** Lighthouse-optimized (100/100)
+* **Validation:** Zod Schema Parsing
+  
 ---
 
 ## 🧠 AI Integration Architecture (Gemini 3.5 Flash)
@@ -60,12 +56,12 @@ To ensure enterprise-grade reliability and accountability, Stadium Guardian is b
 
 ## ⚙️ Local Setup & Verification
 
-Follow these precise steps to securely install dependencies and evaluate the Stadium Guardian operations centre.
+Follow these precise steps to securely install dependencies and evaluate the Stadium Guardian operations center.
 
 **1. Clone the Repository & Install**
 
 ```bash
-git clone https://github.com/your-username/stadium-guardian.git
+git clone https://github.com/rprishabh/Smart_Stadium_Guardian.git
 cd stadium-guardian
 npm install
 
